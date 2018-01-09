@@ -14,9 +14,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 from pplib import parameters as p
+from scipy.stats import binned_statistic
 
-
-class U2sgs:
+class U2sgs(pd.DataFrame):
 
     def __init__(self,data):
 
@@ -35,7 +35,39 @@ class U2sgs:
         tausg['uparf_y'] = data['uparf'][0]
         tausg['uparf_z'] = data['uparf'][1]
 
-        self.df = pd.DataFrame(tausg)
+        super().__init__(tausg)
+
+    def bin_stat(self, columns, pfields=()):
+        
+        df_binned = {}
+        norm_factor = {v:p.utau for v in self.columns if v!='y'}
+        norm_factor['y'] = 1.0 
+        for c in columns:
+            df_binned[c] = (binned_statistic(self['y'], self[c],bins=p.bins_y,statistic='mean')[0] )/norm_factor[c] 
+            df_binned[c+"_rms"] = (binned_statistic(self['y'], self[c],bins=p.bins_y,statistic='std')[0] )/norm_factor[c] 
+
+            for field in pfields:
+                df_binned[c] = df_binned[c] + (binned_statistic(self['y'], self[c],bins=p.bins_y,statistic='mean')[0] )/norm_factor[c] 
+                df_binned[c+"_rms"] = df_binned[c] + (binned_statistic(self['y'], self[c],bins=p.bins_y,statistic='std')[0] )/norm_factor[c] 
+
+
+            df_binned[c] = df_binned[c]/(len(pfields)+1)
+            df_binned[c+"_rms"] = df_binned[c+"_rms"]/(len(pfields)+1)
+        
+        return pd.DataFrame(df_binned)
+
+    def _pos_symm(self):
+        
+        nondimensional_pos = 150 * (1.0 - np.absolute(self['y']))
+        return nondimensional_pos
+
+
+    def map_f_init(self,f,columns):
+
+        np_f = np.vectorize(f)
+
+        for i in columns:
+            self["f_"+i] = np_f(self[i])
 
     def draw_tau(self, pict_path):
         fig = plt.figure(figsize = (12,6))

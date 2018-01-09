@@ -68,7 +68,7 @@ vpar,upar: real*8 [400000,4]
 400000 particles - 4 types of particles 100000 of each
 
 '''
-data_dict3 = OrderedDict([("t",{"size":4,"type":"integer"}),
+data_dict_apriori = OrderedDict([("t",{"size":4,"type":"integer"}),
             ("time",{"size":8,"type":"real"}),
             ("pos",{"size":8, "shape":[3,N],"type":"real"}),
             ("vpar",{"size":8, "shape":[4,N],"type":"real"}),
