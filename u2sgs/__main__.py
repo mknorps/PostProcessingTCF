@@ -10,6 +10,7 @@ import os
 import pandas as pd
 
 import input_files as f
+import u2sgs_stats as s
 
 from pplib import options
 from pplib import parameters as p
@@ -18,18 +19,6 @@ from pplib import binary_from_fortran as bff
 
 
 
-def compute_bin_stats():
-
-    for particle_file in f.files_def:
-
-        data_hrf = bff.unpack_particles_file(particle_file,p.data_dict_apriori)
-        d = ua.U2sgs(data_hrf)
-        df = bu.BinnedTau(d.df)
-        binned = df.bin_stat(['usgs_x','usgs_y','usgs_z',
-                              'upar_x','upar_y','upar_z',
-                              'uparf_x','uparf_y','uparf_z' ])
-
-    
 
 def run_project(args):
     
@@ -43,16 +32,9 @@ def run_project(args):
         print('Hello! ', y)
     
     particle_file = "/home/gemusia/wyniki/apriori/heavy_particles_2580"
-    data_hrf = bff.unpack_particles_file(particle_file,p.data_dict_apriori)
 
-    d = ua.U2sgs(data_hrf)
-
-    print(type(d))
-    binned = d.bin_stat(['usgs_x','usgs_y','usgs_z',
-                          'upar_x','upar_y','upar_z',
-                          'uparf_x','uparf_y','uparf_z' ])
-
-    print(binned)
+    s.compute_bin_stats_def()
+    s.compute_bin_stat_LES()
 
 if __name__=="__main__":
 
