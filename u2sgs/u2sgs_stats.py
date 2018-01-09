@@ -3,7 +3,7 @@
 # File name: u2sgs_stats.py
 # Created by: gemusia
 # Creation date: 09-01-2018
-# Last modified: 09-01-2018 18:42:15
+# Last modified: 09-01-2018 22:44:02
 # Purpose: 
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -34,19 +34,22 @@ def data_generator(files):
 
 def compute_bin_stats_model(files):
 
+    print(files[0])
+    average = 0 
     try:
         average = sum(data_generator(files))/len(files)
-        return average
 
     except ZeroDivisionError:
         print("Empty argument - no files listed")
 
+    return average
+
 
 
 def compute_bin_stat_LES():
-    compute_bin_stats_model(f.files_LES)
+    return compute_bin_stats_model(f.files_LES)
 def compute_bin_stat_apriori():
-    compute_bin_stats_model(f.files_apriori)
+    return compute_bin_stats_model(f.files_apriori)
 
 
 def write_to_file(file_write):

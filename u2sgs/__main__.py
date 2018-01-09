@@ -34,7 +34,8 @@ def run_project(args):
     particle_file = "/home/gemusia/wyniki/apriori/heavy_particles_2580"
 
     s.compute_bin_stats_def()
-    s.compute_bin_stat_LES()
+    stats_LES = s.compute_bin_stat_LES()
+    print(stats_LES.head())
 
 if __name__=="__main__":
 
