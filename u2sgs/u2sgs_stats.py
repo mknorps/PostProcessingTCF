@@ -3,28 +3,28 @@
 # File name: u2sgs_stats.py
 # Created by: gemusia
 # Creation date: 09-01-2018
-# Last modified: 09-01-2018 22:44:02
+# Last modified: 10-01-2018 14:13:26
 # Purpose: 
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 import input_files as f
 import pandas as pd
+import numpy as np
 
 
-def compute_bin_stats_def():
+from pplib import binary_from_fortran as bff
+from pplib import parameters as p
+from pplib import u2sgs_apriori as ua
 
-    binned_stats = {}
-    for particle_file in f.files_def:
 
+def particle_generator(files):
+
+    for particle_file in files:
         data_hrf = bff.unpack_particles_file(particle_file,p.data_dict_apriori)
-        d = ua.U2sgs(data_hrf)
-        df = bu.BinnedTau(d.df)
-        binned = df.bin_stat(['usgs_x','usgs_y','usgs_z',
-                              'upar_x','upar_y','upar_z',
-                              'uparf_x','uparf_y','uparf_z' ])
-
-    return binned_stats
+        df = ua.U2sgs(data_hrf)
+        binned = df.bin_stat(['usgs_x','usgs_y','usgs_z','cov_xy'], covariances=[['usgs_x','usgs_y'],['usgs_x','usgs_z'],['usgs_y','usgs_z']])
+        yield binned 
 
 def data_generator(files):
 
@@ -32,12 +32,11 @@ def data_generator(files):
         data = pd.read_table(fluid_file,names=f.columns, delim_whitespace=True, header=None)
         yield data 
 
-def compute_bin_stats_model(files):
+def compute_stats(generator_function,files):
 
-    print(files[0])
     average = 0 
     try:
-        average = sum(data_generator(files))/len(files)
+        average = sum(generator_function(files))/len(files)
 
     except ZeroDivisionError:
         print("Empty argument - no files listed")
@@ -47,14 +46,16 @@ def compute_bin_stats_model(files):
 
 
 def compute_bin_stat_LES():
-    return compute_bin_stats_model(f.files_LES)
+    return compute_stats(data_generator,f.files_LES)
 def compute_bin_stat_apriori():
-    return compute_bin_stats_model(f.files_apriori)
+    return compute_stats(data_generator,f.files_apriori)
+def compute_bin_stat_def():
+    return compute_stats(particle_generator,f.files_def)
 
 
 def write_to_file(file_write):
   
-    data_def =  compute_bin_stats_def()
+    data_def =  compute_bin_stat_def()
     data_apriori =  compute_bin_stat_apriori()
     data_LES =  compute_bin_stat_LES()
 

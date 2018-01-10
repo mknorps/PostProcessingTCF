@@ -34,26 +34,25 @@ class U2sgs(pd.DataFrame):
         tausg['uparf_x'] = data['uparf'][2]
         tausg['uparf_y'] = data['uparf'][0]
         tausg['uparf_z'] = data['uparf'][1]
+        tausg['cov_xy'] = (data['upar'][2] - data['uparf'][2])*(data['upar'][0] - data['uparf'][0]) 
 
         super().__init__(tausg)
 
-    def bin_stat(self, columns, pfields=()):
+    def bin_stat(self, columns, covariances = []):
         
         df_binned = {}
         norm_factor = {v:p.utau for v in self.columns if v!='y'}
         norm_factor['y'] = 1.0 
-        for c in columns:
+        for c in columns + ['y']:
             df_binned[c] = (binned_statistic(self['y'], self[c],bins=p.bins_y,statistic='mean')[0] )/norm_factor[c] 
             df_binned[c+"_rms"] = (binned_statistic(self['y'], self[c],bins=p.bins_y,statistic='std')[0] )/norm_factor[c] 
-
-            for field in pfields:
-                df_binned[c] = df_binned[c] + (binned_statistic(self['y'], self[c],bins=p.bins_y,statistic='mean')[0] )/norm_factor[c] 
-                df_binned[c+"_rms"] = df_binned[c] + (binned_statistic(self['y'], self[c],bins=p.bins_y,statistic='std')[0] )/norm_factor[c] 
-
-
-            df_binned[c] = df_binned[c]/(len(pfields)+1)
-            df_binned[c+"_rms"] = df_binned[c+"_rms"]/(len(pfields)+1)
         
+        for cv in covariances:
+            cov = self[cv[0]]*self[cv[1]]
+            df_binned[cv[0]+'_'+cv[1]] = ((binned_statistic(self['y'],cov ,bins=p.bins_y,statistic='mean')[0] )  - 
+            (binned_statistic(self['y'], self[cv[0]],bins=p.bins_y,statistic='mean')[0] )*
+            (binned_statistic(self['y'], self[cv[0]],bins=p.bins_y,statistic='mean')[0] ))/(norm_factor[c]**2)
+
         return pd.DataFrame(df_binned)
 
     def _pos_symm(self):
@@ -69,26 +68,3 @@ class U2sgs(pd.DataFrame):
         for i in columns:
             self["f_"+i] = np_f(self[i])
 
-    def draw_tau(self, pict_path):
-        fig = plt.figure(figsize = (12,6))
-        ax1 = plt.subplot2grid((1,3),(0,0)) #tme_xx
-        ax2 = plt.subplot2grid((1,3),(0,1)) #time_yy
-        ax3 = plt.subplot2grid((1,3),(0,2)) #time_zz
-        ax = [ax1,ax2,ax3]
-
-        for figure in ax:
-            figure.set_xlim([-1,1])
-            figure.tick_params(axis='both',labelsize=15)
-            figure.set_xlabel("$y$",fontsize=15)
-
-        ax1.set_title("$u_{x}^{+}$" ,fontsize=15)
-        ax2.set_title("$u_{y}^{+}$" ,fontsize=15)
-        ax3.set_title("$u_{z}^{+}$" ,fontsize=15)
-
-        #for i,subplot in zip(p.DirectionList,ax):
-            #subplot.plot(,binstat[x]["tausg2_"+i], **p.line_style_dict[x])
-
-        leg = ax3.legend(fontsize=15)
-        plt.tight_layout()
-        fig.savefig(pict_path )
-        plt.close(fig)

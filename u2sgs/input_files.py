@@ -3,7 +3,7 @@
 # File name: input_files.py
 # Created by: gemusia
 # Creation date: 09-01-2018
-# Last modified: 09-01-2018 22:28:50
+# Last modified: 10-01-2018 11:51:42
 # Purpose: 
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -25,4 +25,6 @@ files_apriori = [file_path_apriori +filename for filename in listdir(file_path_a
 files_LES     = [file_path_LES +filename for filename in listdir(file_path_LES)]
 
 columns = ['y','u2sgs_y','u2sgs_z','u2sgs_x','u2sgs_yz','u2sgs_xy','u2sgs_xz']
-types = ['def','aprori','LES']
+types = ['def','apriori','LES']
+
+asymm_columns = ['u2sgs_xy','y']

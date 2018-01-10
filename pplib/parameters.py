@@ -32,7 +32,7 @@ line_style_dict = {"fluid": {"ls":"solid", "color":"blue", "label":"fluid","lw":
 
 # bins for histograms are taken according to eros of Chebyshev
 #      polynomials
-N_bins = 16
+N_bins = 32
 def y(j):
     return np.cos(float(j)*np.pi/float(N_bins))
 
