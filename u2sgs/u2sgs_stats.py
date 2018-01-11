@@ -3,7 +3,7 @@
 # File name: u2sgs_stats.py
 # Created by: gemusia
 # Creation date: 09-01-2018
-# Last modified: 10-01-2018 14:13:26
+# Last modified: 10-01-2018 15:19:35
 # Purpose: 
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -15,7 +15,7 @@ import numpy as np
 
 from pplib import binary_from_fortran as bff
 from pplib import parameters as p
-from pplib import u2sgs_apriori as ua
+import u2sgs_apriori as ua
 
 
 def particle_generator(files):

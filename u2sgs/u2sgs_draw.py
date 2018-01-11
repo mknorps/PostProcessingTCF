@@ -3,7 +3,7 @@
 # File name: u2sgs_stats.py
 # Created by: gemusia
 # Creation date: 09-01-2018
-# Last modified: 10-01-2018 13:54:22
+# Last modified: 10-01-2018 15:05:56
 # Purpose: 
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -118,10 +118,13 @@ class DrawU2sgs(pd.Panel):
         ax1.set_title("$Cov(u_{x},u_y)^{+}$" ,fontsize=15)
         ax2.set_title("$\\rho(u_{x},u_y)$" ,fontsize=15)
 
-        for simulation in f.types:
+        for simulation in ['aprori','LES']:
             ax1.plot(data[simulation]['y'],data[simulation]["usgs_x_usgs_y"],label=simulation)
             correlation = np.divide(data[simulation]["usgs_x_usgs_y"], data[simulation]["usgs_x"]*data[simulation]["usgs_y"])
             ax2.plot(data[simulation]['y'],correlation,label=simulation)
+        ax1.plot(data['def']['y'],data['def']["cov_xy"],label='def')
+        correlation = np.divide(data['def']["usgs_x_usgs_y"], data['def']["usgs_x"]*data['def']["usgs_y"])
+        ax2.plot(data['def']['y'],correlation,label='def')
 
         leg = ax2.legend(fontsize=15)
         plt.tight_layout()
