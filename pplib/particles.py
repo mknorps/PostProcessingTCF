@@ -16,27 +16,30 @@ import matplotlib.pyplot as plt
 from pplib import parameters as p
 from scipy.stats import binned_statistic
 
-class U2sgs(pd.DataFrame):
+class Particles(pd.DataFrame):
 
-    def __init__(self,data):
+    def __init__(self,data,St=('fluid',(0,p.N)),columns=[]):
 
-        tausg = {} 
-        tausg['x'] = data['pos'][2] % (2*np.pi)
-        tausg['y'] = data['pos'][0]
-        tausg['z'] = data['pos'][1] % (np.pi)
+        particles = {} 
+        ymin = St[1][0]
+        ymax = St[1][1]
 
-        tausg['usgs_x'] = data['upar'][2] - data['uparf'][2] 
-        tausg['usgs_y'] = data['upar'][0] - data['uparf'][0] 
-        tausg['usgs_z'] = data['upar'][1] - data['uparf'][1] 
-        tausg['upar_x'] = data['upar'][2]
-        tausg['upar_y'] = data['upar'][0]
-        tausg['upar_z'] = data['upar'][1]
-        tausg['uparf_x'] = data['uparf'][2]
-        tausg['uparf_y'] = data['uparf'][0]
-        tausg['uparf_z'] = data['uparf'][1]
-        tausg['cov_xy'] = (data['upar'][2] - data['uparf'][2])*(data['upar'][0] - data['uparf'][0]) 
+        particles['x'] = data['pos'][2][ymin:ymax] % (2*np.pi)
+        print(particles['x'].shape)
+        particles['y'] = data['pos'][0][ymin:ymax]
+        particles['z'] = data['pos'][1][ymin:ymax] % (np.pi)
 
-        super().__init__(tausg)
+        for var in columns:
+            particles[var] = data[var[:-2]][p.DirectionMap[var[-1]]][ymin:ymax]
+            
+        super().__init__(particles)
+        self.St = St[0]
+
+
+    def new_column(self,name,function,args=[]):
+
+        self[name] =self[args].apply(lambda x: function(*x),axis=1)
+        
 
     def bin_stat(self, columns, covariances = []):
         
@@ -51,7 +54,7 @@ class U2sgs(pd.DataFrame):
             cov = self[cv[0]]*self[cv[1]]
             df_binned[cv[0]+'_'+cv[1]] = ((binned_statistic(self['y'],cov ,bins=p.bins_y,statistic='mean')[0] )  - 
             (binned_statistic(self['y'], self[cv[0]],bins=p.bins_y,statistic='mean')[0] )*
-            (binned_statistic(self['y'], self[cv[0]],bins=p.bins_y,statistic='mean')[0] ))/(norm_factor[c]**2)
+            (binned_statistic(self['y'], self[cv[1]],bins=p.bins_y,statistic='mean')[0] ))/(norm_factor[c]**2)
 
         return pd.DataFrame(df_binned)
 

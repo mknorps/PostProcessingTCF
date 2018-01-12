@@ -60,7 +60,6 @@ def unpack_particles_file(f,data_dict):
 
         read_data[key] = data
 
-    assert (bmax == f_size)
     return read_data 
 
 

@@ -3,7 +3,7 @@
 # File name: u2sgs_stats.py
 # Created by: gemusia
 # Creation date: 09-01-2018
-# Last modified: 12-01-2018 10:10:22
+# Last modified: 12-01-2018 10:59:47
 # Purpose: 
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -18,25 +18,15 @@ from itertools import product
 from pplib import parameters as p
 import input_files as f
 
-def unify_columns(data):
 
-    for panel in ['apriori','LES']:
-        for d in p.DirectionList:
-            data[panel]['usgs_'+d+'_rms'] = np.sqrt(data[panel]['u2sgs_'+d])
-        data[panel]['usgs_x_usgs_y'] = data[panel]['u2sgs_xy']
-        
-    return data
-
-
-class DrawU2sgs(pd.Panel):
+class Draw(pd.Panel):
 
 
     def __init__(self):
 
-        data =  pd.read_excel(f.file_path_write, sheet_name = None)
-        unified_data = unify_columns(data)
+        data =  pd.read_csv(f.file_path_write)
 
-        super().__init__(unified_data)
+        super().__init__(data)
 
 
     def symmetrise(self):

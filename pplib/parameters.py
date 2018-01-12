@@ -11,6 +11,7 @@
 import numpy as np
 from collections import OrderedDict
 from os.path import expanduser
+from itertools import product
 
 N     = 400000
 N_par = 100000 #number of particles of one kind
@@ -18,7 +19,10 @@ utau = 0.0429
 Retau = 150
 ttau = 1.0/(utau*Retau)
 StList = ['St0.2','St1','St5','St25']
-DirectionList=['x','y','z']
+DirectionList = ['x','y','z']
+DirectionMap = dict(zip(DirectionList,[2,0,1])) 
+VariableList = ['vpar', 'upar','usgs']
+ColumnList = [i[0]+'_'+i[1]  for i in product(VariableList,DirectionList)]
 
 
 line_style_dict = {"fluid": {"ls":"solid", "color":"blue", "label":"fluid","lw":2},
@@ -68,20 +72,7 @@ vpar,upar: real*8 [400000,4]
 400000 particles - 4 types of particles 100000 of each
 
 '''
-data_dict_apriori = OrderedDict([("t",{"size":4,"type":"integer"}),
-            ("time",{"size":8,"type":"real"}),
-            ("pos",{"size":8, "shape":[3,N],"type":"real"}),
-            ("vpar",{"size":8, "shape":[4,N],"type":"real"}),
-            ("upar",{"size":8, "shape":[4,N],"type":"real"}),
-            ("usgs",{"size":8, "shape":[3,N],"type":"real"}),
-            ("uparf",{"size":8, "shape":[4,N],"type":"real"})])
 
-data_dict2 = OrderedDict([("t",{"size":4,"type":"integer"}),
-            ("time",{"size":8,"type":"real"}),
-            ("pos",{"size":8, "shape":[N,3],"type":"real"}),
-            ("vpar",{"size":8, "shape":[N,4],"type":"real"}),
-            ("upar",{"size":8, "shape":[N,4],"type":"real"}),
-            ("usgs",{"size":8, "shape":[N,3],"type":"real"})])
 
 data_dict = OrderedDict([("t",{"size":4,"type":"integer"}),
             ("time",{"size":8,"type":"real"}),
