@@ -3,17 +3,17 @@
 # File name: compute_stats.py
 # Created by: gemusia
 # Creation date: 12-01-2018
-# Last modified: 12-01-2018 09:46:30
+# Last modified: 15-01-2018 10:16:55
 # Purpose: 
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-def compute_stats(generator_function,files):
+def compute_stats(generator_function,files,*args):
 
     average = 0 
     try:
-        average = sum(generator_function(files))/len(files)
+        average = sum(generator_function(files,*args))/len(files)
 
     except ZeroDivisionError:
         print("Empty argument - no files listed")

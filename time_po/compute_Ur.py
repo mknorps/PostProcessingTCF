@@ -3,7 +3,7 @@
 # File name: compute_Ur.py
 # Created by: gemusia
 # Creation date: 12-01-2018
-# Last modified: 12-01-2018 13:56:26
+# Last modified: 15-01-2018 10:22:03
 # Purpose: 
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -17,11 +17,13 @@ from pplib import particles as par
 from pplib import compute_stats as cs
 
 
-def particle_generator(files):
+def particle_generator(files,ptype):
 
     for particle_file in files:
+        pmin=f.prange[ptype][0]
+        pmax=f.prange[ptype][1]
         data_hrf = bff.unpack_particles_file(particle_file,f.data_dict_min)
-        df = par.Particles(data_hrf,columns=f.ColumnList)
+        df = par.Particles(data_hrf,(ptype,(pmin,pmax)),columns=f.ColumnList)
 
         for d in p.DirectionList:
             df.new_column('ur_'+d,lambda x,y: x-y, ['vpar_'+d,'upar_'+d])
@@ -31,9 +33,9 @@ def particle_generator(files):
         binned = df.bin_stat(['ur_x','ur_y','ur_z','upar_x','vpar_x'])
         yield binned 
 
-def write_to_file(file_write):
+def write_to_file(file_write,ptype):
 
-    data = cs.compute_stats(particle_generator,f.files_LES)
+    data = cs.compute_stats(particle_generator,f.files_LES,ptype)
 
     data.to_csv(file_write)
 

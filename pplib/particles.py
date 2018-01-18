@@ -25,7 +25,6 @@ class Particles(pd.DataFrame):
         ymax = St[1][1]
 
         particles['x'] = data['pos'][2][ymin:ymax] % (2*np.pi)
-        print(particles['x'].shape)
         particles['y'] = data['pos'][0][ymin:ymax]
         particles['z'] = data['pos'][1][ymin:ymax] % (np.pi)
 
