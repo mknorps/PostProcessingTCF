@@ -3,7 +3,7 @@
 # File name: DNSvsFiltered_heatmap.py
 # Created by: gemusia
 # Creation date: 18-01-2018
-# Last modified: 18-01-2018 11:55:02
+# Last modified: 18-01-2018 14:26:05
 # Purpose: 
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -95,7 +95,6 @@ def draw_heatmaps(slices,pict_path):
     fig.savefig(pict_path )
     plt.close(fig)
     
-
 
 if __name__=='__main__':
     
