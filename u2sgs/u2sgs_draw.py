@@ -3,7 +3,7 @@
 # File name: u2sgs_stats.py
 # Created by: gemusia
 # Creation date: 09-01-2018
-# Last modified: 12-01-2018 10:10:22
+# Last modified: 20-01-2018 10:25:47
 # Purpose: 
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -56,8 +56,10 @@ class DrawU2sgs(pd.Panel):
             data_symm[s]['y'] = (1-data_symm[s]['y'])*p.Retau
         data_symm['def']['y'] = (1+data_symm['def']['y'])*p.Retau
 
+
+        data_return = data_symm
         
-        return data_symm
+        return data_return
 
     def draw_u2sgs(self,pict_path,is_symm=True):
 
@@ -149,10 +151,58 @@ class DrawU2sgs(pd.Panel):
         ax.set_title("$k_{sg}^{+}$" ,fontsize=15)
 
         for simulation in f.types:
+
             ksgs = 0.5 * (data[simulation]["usgs_x_rms"]**2 +\
                    data[simulation]["usgs_y_rms"]**2 +\
                    data[simulation]["usgs_z_rms"]**2)
             ax.plot(data[simulation]['y'],ksgs,label=simulation,lw=3)
+
+        leg = ax.legend(fontsize=15)
+        plt.tight_layout()
+        fig.savefig(pict_path )
+        plt.close(fig)
+
+    def draw_sigma_check(self,pict_path,is_symm=True):
+
+        tau_data = pd.read_csv("~/wyniki/time_scales_ii/tau.csv")
+        tau = (tau_data['fluid_SGSles_x']+tau_data['fluid_SGSles_y']+tau_data['fluid_SGSles_z'])/3.0 
+        tau_long = [tau[0]/2,tau[0]]
+        for t1,t2 in zip(tau[1:],tau[:-1]):
+            tau_long.append(t1)
+            tau_long.append((t1+t2)/2)
+        tau_long.append(t1)    
+        tau_long = np.array(tau_long)
+        print(tau)
+        print(tau_long)
+
+        graduf = np.array([ 0.62424453, 1.05721209, 0.8779482,  0.7037418, 0.50064856, 0.31515047, 0.18369803, 0.10714933, 0.06798791, 0.04899518, 0.03922657, 0.0364343, 0.03330875,0.02768044,0.02199585,0.0119288, 0.])
+
+        l = len(graduf)
+        data = self
+        fig = plt.figure(figsize = (6,4))
+        ax = plt.subplot2grid((1,1),(0,0)) 
+
+        if is_symm:
+            #ax.set_xlim([0.3,150])
+            #ax.set_xscale('log')
+            ax.tick_params(axis='both',labelsize=15)
+            ax.set_xlabel("$y^{+}$",fontsize=15)
+        else:
+            ax.set_xlim([-1,1])
+            ax.tick_params(axis='both',labelsize=15)
+            ax.set_xlabel("$y$",fontsize=15)
+
+        ax.set_title("$k_{sg}^{+}$" ,fontsize=15)
+
+        for simulation in f.types:
+            check = data[simulation]["usgs_x_rms"][:l]**2 -\
+                   data[simulation]["usgs_x_usgs_y"][:l]**2/\
+                   data[simulation]["usgs_y_rms"][:l]**2- \
+                   data[simulation]["usgs_y_rms"][:l]**2 *\
+                   tau_long**2/4* graduf
+            print( check)
+
+            ax.plot(data[simulation]['y'][:l],check,label=simulation,lw=3)
 
         leg = ax.legend(fontsize=15)
         plt.tight_layout()

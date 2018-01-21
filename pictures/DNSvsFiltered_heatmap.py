@@ -3,7 +3,7 @@
 # File name: DNSvsFiltered_heatmap.py
 # Created by: gemusia
 # Creation date: 18-01-2018
-# Last modified: 18-01-2018 14:26:05
+# Last modified: 21-01-2018 21:43:26
 # Purpose: 
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -65,6 +65,17 @@ def cut_slice(data,y=0):
 
     return slices
 
+def cut_line(data,y=0):
+
+    lines = {}
+    for field in dns_fields:
+        lines[field] =data[field][:,dns_dimensions[1]//2,dns_dimensions[2]//2]  
+
+    for field in apriori_fields:
+        lines[field] =data[field][:,apriori_dimensions[1]//2,apriori_dimensions[2]//2]  
+
+    return lines
+
 
 def draw_heatmaps(slices,pict_path):
 
@@ -95,11 +106,40 @@ def draw_heatmaps(slices,pict_path):
     fig.savefig(pict_path )
     plt.close(fig)
     
+def draw_lines(lines,pict_path):
+
+    fig = plt.figure(figsize = (8,4))
+    ax1 = plt.subplot2grid((1,1),(0,0)) #tme_xx
+
+    ax1.xaxis.set_ticklabels([])
+    ax1.xaxis.set_ticks([])
+    ax1.yaxis.set_ticks([])
+    ax1.yaxis.set_ticklabels([])
+    #ax1.xaxis.set_visible(False)
+    #ax1.yaxis.set_visible(False)
+
+    ax1.set_xlabel("$x$",fontsize=15)
+    ax1.set_ylabel("$U_{x}$",fontsize=15)
+    #ax1.set_xlim([0,2*np.pi])
+    #ax1.set_ylim([0,np.pi])
+
+    filtered_x = np.arange(32)*4
+    ax1.plot(lines['upp_Ux'],label="DNS",lw=2)
+    ax1.plot(filtered_x,lines['uppf_Ux'],label="apriori",lw=2)
+
+    leg = ax1.legend(fontsize=15)
+    plt.tight_layout()#
+    fig.savefig(pict_path )
+    plt.close(fig)
 
 if __name__=='__main__':
     
     data = load_data()
-    slices = cut_slice(data)
+    #slices = cut_slice(data)
+    lines = cut_line(data)
+    print(lines)
 
-    pic_path = fig_path + "heatmaps.png"
-    draw_heatmaps(slices,pic_path)
+    #pic_path = fig_path + "heatmaps.png"
+    #draw_heatmaps(slices,pic_path)
+    pic_path = fig_path + "lines.pdf"
+    draw_lines(lines,pic_path)

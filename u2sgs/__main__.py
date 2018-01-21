@@ -32,11 +32,12 @@ def run_project(args):
         print('Hello! ', y)
     
 
-    s.write_to_file(f.file_path_write)
+    #s.write_to_file(f.file_path_write)
 
     data = d.DrawU2sgs()
     data.draw_u2sgs(f.file_path_main + "u2sgs.pdf")
     data.draw_ksgs(f.file_path_main + "ksgs.pdf")
+    data.draw_sigma_check(f.file_path_main + "sigma_check.pdf")
    # data.draw_cov_xy(f.file_path_main + "cov_xy.pdf")
 
 if __name__=="__main__":

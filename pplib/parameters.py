@@ -37,8 +37,12 @@ line_style_dict = {"fluid": {"ls":"solid", "color":"blue", "label":"fluid","lw":
 # bins for histograms are taken according to eros of Chebyshev
 #      polynomials
 N_bins = 32
+N_bins_wide = 16
 def y(j):
     return np.cos(float(j)*np.pi/float(N_bins))
+
+def y_wide(j):
+    return np.cos(float(j)*np.pi/float(N_bins_wide))
 
 def y_plus(y):
     return Retau * (y+1) 
@@ -49,7 +53,9 @@ def Chebyshev_zeroes(N):
 
 bins = list(reversed([y(j)*Retau for j in range(N_bins//2+1 )]))
 bins_y = np.array(list(reversed([y(j) for j in range(N_bins+1)])))
+bins_y_wide = np.array(list(reversed([y_wide(j) for j in range(N_bins_wide+1)])))
 bins_centers = 0.5*(bins_y[:N_bins]+bins_y[1:])
+bins_centers_wide = 0.5*(bins_y_wide[:N_bins_wide]+bins_y_wide[1:])
 
 # file structure
 # files are written in fortran with :

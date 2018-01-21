@@ -3,7 +3,7 @@
 # File name: __main__.py
 # Created by: gemusia
 # Creation date: 16-12-2017
-# Last modified: 09-01-2018 11:32:08
+# Last modified: 21-01-2018 10:44:57
 # Purpose: 
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -17,15 +17,7 @@ from pplib import options
 from pplib import parameters as p
 from pplib import slices as s
 from pplib import slice_cutter as sc
-from pplib import binary_from_fortran as bff
 
-'''
-from pplib import binary_from_fortran as bff
-from pplib import parameters as p
-from pplib import tausg as s
-from pplib import binned_tau as bt
-from pplib import optimize as o
-'''
 
 def run_project(args):
     

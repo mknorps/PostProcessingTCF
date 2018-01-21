@@ -18,7 +18,7 @@ from scipy.stats import binned_statistic
 
 class Particles(pd.DataFrame):
 
-    def __init__(self,data,St=('fluid',(0,p.N)),columns=[]):
+    def __init__(self,data,St=('fluid',(0,p.N)),columns=[],columns_tau=[]):
 
         particles = {} 
         ymin = St[1][0]
@@ -31,6 +31,10 @@ class Particles(pd.DataFrame):
         for var in columns:
             particles[var] = data[var[:-2]][p.DirectionMap[var[-1]]][ymin:ymax]
             
+        for var in columns_tau:
+            for i in range(len(data[var])):
+                particles[var+'_'+str(i)] = data[var][i][ymin:ymax]
+            
         super().__init__(particles)
         self.St = St[0]
 
@@ -40,11 +44,12 @@ class Particles(pd.DataFrame):
         self[name] =self[args].apply(lambda x: function(*x),axis=1)
         
 
-    def bin_stat(self, columns, covariances = []):
+    def bin_stat(self, columns, covariances = [], norm_factor={}):
         
         df_binned = {}
-        norm_factor = {v:p.utau for v in self.columns if v!='y'}
-        norm_factor['y'] = 1.0 
+        if norm_factor == {}:
+            norm_factor = {v:p.utau for v in self.columns if v!='y'}
+            norm_factor['y'] = 1.0 
         for c in columns + ['y']:
             df_binned[c] = (binned_statistic(self['y'], self[c],bins=p.bins_y,statistic='mean')[0] )/norm_factor[c] 
             df_binned[c+"_rms"] = (binned_statistic(self['y'], self[c],bins=p.bins_y,statistic='std')[0] )/norm_factor[c] 
