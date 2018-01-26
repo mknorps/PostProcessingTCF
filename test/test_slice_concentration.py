@@ -3,7 +3,7 @@
 # File name: test_optimize.py
 # Created by: gemusia
 # Creation date: 22-12-2017
-# Last modified: 02-01-2018 13:38:05
+# Last modified: 26-01-2018 16:13:36
 # Purpose: 
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -11,7 +11,7 @@ import unittest
 import numpy as np
 import pandas as pd
 
-from mylib import slice_concentration as sc
+from pplib import slice_concentration as sc
 
 from hypothesis import given,reproduce_failure
 from hypothesis.extra.numpy import *

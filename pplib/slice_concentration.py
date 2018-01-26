@@ -2,7 +2,7 @@
 # File name: slice_concentration.py
 # Created by: gemusia
 # Creation date: 02-01-2018
-# Last modified: 09-01-2018 11:33:48
+# Last modified: 26-01-2018 16:14:46
 # Purpose: 
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -23,9 +23,7 @@ class SliceConc(pd.DataFrame):
         ydata = self['z']
         H,xedges,yedges = np.histogram2d(xdata, ydata, bins=binedges,normed=True)
        
-        print(sum(H))
         bins2d = H.flatten()
         h,bins =np.histogram(bins2d,normed=True)
 
-        print(h)
         return h

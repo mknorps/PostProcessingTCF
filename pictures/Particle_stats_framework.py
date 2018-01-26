@@ -22,6 +22,7 @@ reference_path_DNS  = expanduser("~") +"/REFERENCE_DATA/Marchiolli_DATA/TUE/"
 DirectionList=['x','y','z']
 DirectionList2=['y','z','x']
 CommentRows = 58
+#CommentRows = 49
 CommentRows_LES = 49
 CommentRows_DNS = 47
 tauplus = 0.0433 
@@ -43,7 +44,8 @@ data_DNS = {}
 #######################################
 
 for x in StList:
-    data[x]     = np.loadtxt(file_path + 'particle_stat_3600-3630_' + x +'.0_4', skiprows = CommentRows)
+    #data[x]     = np.loadtxt(file_path + 'particle_stat_3850-3950_' + x +'.0_4', skiprows = CommentRows)
+    data[x]     = np.loadtxt(file_path + 'particle_stat_' + x, skiprows = CommentRows)
     data_LES[x] =  np.loadtxt(reference_path_LES +'particle_stat_' + x, skiprows = CommentRows_LES)
     data_DNS[x] = np.loadtxt(reference_path_DNS +'dns_particles_' + x , skiprows = CommentRows_DNS)
 
@@ -110,7 +112,7 @@ def velocity_panel():
 
         leg = ax0.legend(fontsize=15)
         plt.tight_layout()
-        fig.savefig(fig_path + velocity + "_panel.pdf")
+        fig.savefig(fig_path + velocity + "_panel_fractal.pdf")
         plt.close(fig)
 
 
@@ -160,7 +162,7 @@ def ksgs_panel():
 
             leg = ax0.legend(fontsize=15)
             plt.tight_layout()
-            fig.savefig(fig_path + velocity +'_St'+x + "_ksgs_panel_log.pdf")
+            fig.savefig(fig_path + velocity +'_St'+x + "_ksgs_panel_log_fractal.pdf")
             plt.close(fig)
 
 
@@ -200,7 +202,7 @@ def concentration_panel():
 
         leg = ax0.legend(fontsize=15)
         plt.tight_layout()
-        fig.savefig(fig_path + velocity + "_concentration_panel.pdf")
+        fig.savefig(fig_path + velocity + "_concentration_panel_fractal.pdf")
         plt.close(fig)
 
 if __name__=='__main__':

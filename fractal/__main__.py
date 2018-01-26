@@ -56,16 +56,43 @@ def draw_fractal(pict_path,df):
     fig = plt.figure(figsize = (12,6))
     ax1 = plt.subplot2grid((1,1),(0,0)) 
 
+    ax1.xaxis.set_ticklabels([])
+    ax1.xaxis.set_ticks([])
+    ax1.yaxis.set_ticks([])
+    ax1.yaxis.set_ticklabels([])
+    ax1.set_ylabel("$U_{x}$",fontsize=15)
+    ax1.set_xlabel("$x$",fontsize=15) 
+
+
     filtered_x = np.arange(32)*4
     ax1.plot(Ux,label="DNS",lw=2)
     ax1.plot(filtered_x,Ufx,label="apriori",lw=2)
+    #ax1.plot(filtered_x[:8],Ufx[:8],label="apriori",lw=2)
 
-    ax1.plot(df["x_norm"],df["y"],label='fractal',lw=3)
+    ax1.plot(df["x_norm"],df["y"],label='u_{0}',lw=1,color='red')
+    #ax1.plot(df["x_norm"][:32*20],df1["y"][:32*20],label='W^{1}',lw=1,color='black')
 
     leg=ax1.legend()
     plt.tight_layout()
     fig.savefig(pict_path )
     plt.close(fig)
+
+
+def fractal_interpolation(ui):
+    x = []
+    y = []
+    samples=np.arange(0,1,0.01)
+    #samples = np.random.random_sample((75,))
+    for s in samples:
+        for i in range(1,len(Ufx)-1,2):
+            interpolated = ui(i)(s) #one point
+            x.append((i+s)*2-1)
+            y.append(interpolated)
+    fractal = pd.DataFrame({"x":x,"y":y})
+    fractal["x_norm"] = fractal["x"]*2
+    fractal.sort_values("x_norm", inplace=True)
+
+    return fractal
 
 def run_project(args):
     
@@ -75,26 +102,13 @@ def run_project(args):
 
     y = parsed_args.slice_yplus
 
-    d1 = 2**(-1/3)/2    
-    d2 = -2**(-1/3)/2    
+    d1 = 2**(-1/3)/2   
+    d2 = 2**(-1/3)/2    
 
-    fractal_interpolation =at.w(Ufx,d1,d2,0) 
-    samples = np.random.random_sample((10,))
-
-    x = []
-    y = []
-    for s in samples:
-        interpolated = fractal_interpolation(s) 
-        x = x + [s+i for i,u in enumerate(interpolated)]
-        y = y + [u for u in interpolated]
-    print(x,y)
-    fractal = pd.DataFrame({"x":x,"y":y})
-    fractal["x_norm"] = fractal["x"]*4
-
-    fractal.sort_values("x_norm", inplace=True)
+    interpolated_w1 =fractal_interpolation(at.w(Ufx,d1,d2,0)) 
 
 
-    draw_fractal("test.pdf",fractal)
+    draw_fractal("test.pdf", interpolated_w1)
 
 if __name__=="__main__":
 
