@@ -65,11 +65,11 @@ def draw_fractal(pict_path,df):
 
 
     filtered_x = np.arange(32)*4
-    ax1.plot(Ux,label="DNS",lw=2)
+    ax1.plot(Ux,label="DNS",lw=1)
     ax1.plot(filtered_x,Ufx,label="apriori",lw=2)
     #ax1.plot(filtered_x[:8],Ufx[:8],label="apriori",lw=2)
 
-    ax1.plot(df["x_norm"],df["y"],label='u_{0}',lw=1,color='red')
+    ax1.plot(df["x_norm"],df["y"],label='$W^{3}$',lw=2,color='black')
     #ax1.plot(df["x_norm"][:32*20],df1["y"][:32*20],label='W^{1}',lw=1,color='black')
 
     leg=ax1.legend()
@@ -86,10 +86,10 @@ def fractal_interpolation(ui):
     for s in samples:
         for i in range(1,len(Ufx)-1,2):
             interpolated = ui(i)(s) #one point
-            x.append((i+s)*2-1)
+            x.append(s*2+i-1)
             y.append(interpolated)
     fractal = pd.DataFrame({"x":x,"y":y})
-    fractal["x_norm"] = fractal["x"]*2
+    fractal["x_norm"] = fractal["x"]*4
     fractal.sort_values("x_norm", inplace=True)
 
     return fractal
@@ -102,10 +102,10 @@ def run_project(args):
 
     y = parsed_args.slice_yplus
 
-    d1 = 2**(-1/3)/2   
-    d2 = 2**(-1/3)/2    
+    d1 = 3**(-1/3)   
+    d2 = -3**(-1/3)    
 
-    interpolated_w1 =fractal_interpolation(at.w(Ufx,d1,d2,0)) 
+    interpolated_w1 =fractal_interpolation(at.w(Ufx,d1,d2,3)) 
 
 
     draw_fractal("test.pdf", interpolated_w1)

@@ -3,7 +3,7 @@
 # File name: __main__.py
 # Created by: gemusia
 # Creation date: 16-12-2017
-# Last modified: 21-01-2018 10:44:57
+# Last modified: 26-01-2018 19:19:01
 # Purpose: 
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -30,7 +30,9 @@ def run_project(args):
     if y :
         print('Hello! ', y)
     
-    s = sc.cut_slice('/home/gemusia/wyniki/time_scales_modelled/from_tryton/case_45/particles_2905',5)
+    s = sc.cut_slice('/home/gemusia/wyniki/time_scales_modelled/from_tryton/case_45/particles_2905',5,width=1)
+    
+    s.left.to_csv("~/results_for_PhD/voronoi/test_slice.csv")
 
     s.hexbin_plot('/home/gemusia/wyniki/time_scales_modelled/pictures/hexbin_test') 
     s.scatter_plot('/home/gemusia/wyniki/time_scales_modelled/pictures/scatter_test') 

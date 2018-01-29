@@ -3,7 +3,7 @@
 # File name: afine_transformation.py
 # Created by: gemusia
 # Creation date: 20-01-2018
-# Last modified: 26-01-2018 15:36:24
+# Last modified: 26-01-2018 16:45:34
 # Purpose: 
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -22,7 +22,7 @@ def w(U,d1,d2,n):
             return linear_xi
 
         def q2(xi):
-            linear_xi =(U[i+1]-U[i] - d1*(U[i+1]-U[i-1]))*xi+ U[i]-U[i-1]*d2
+            linear_xi =(U[i+1]-U[i] - d2*(U[i+1]-U[i-1]))*xi+ U[i]-U[i-1]*d2
             return linear_xi
 
         def u0(U):

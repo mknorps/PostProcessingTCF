@@ -3,7 +3,7 @@
 # File name: test_optimize.py
 # Created by: gemusia
 # Creation date: 22-12-2017
-# Last modified: 26-01-2018 16:28:48
+# Last modified: 26-01-2018 16:36:05
 # Purpose: 
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -65,7 +65,15 @@ class FractalInterpolationTests(unittest.TestCase):
         U = (1,2,3,4,5)
         d1=2
         d2=2
-        fractal = [at.w(U,d1,d2,1)(i) for i in [1,2]]
+        fractal = [at.w(U,d1,d2,1)(i) for i in [1,3]]
+        self.assertAlmostEqual(U[1],fractal[0](0.5))
+        self.assertAlmostEqual(U[3],fractal[1](0.5))
+
+    def test_linear2(self):
+        U = (1,2,3,4,5)
+        d1=2
+        d2=2
+        fractal = [at.w(U,d1,d2,3)(i) for i in [1,3]]
         self.assertAlmostEqual(U[1],fractal[0](0.5))
         self.assertAlmostEqual(U[3],fractal[1](0.5))
 

@@ -8,10 +8,9 @@
 import sys
 import os
 import pandas as pd
+import matplotlib.pyplot as plt
 
-import input_files as f
-import compute_Ur as c
-import draw
+from scipy.spatial import Voronoi, voronoi_plot_2d
 
 from pplib import options
 
@@ -24,18 +23,15 @@ def run_project(args):
 
     parsed_args = opt.parse(args[1:])
 
-    y = parsed_args.slice_yplus
-
-    if y :
-        print('Hello! ', y)
+    points = pd.read_csv("~/results_for_PhD/voronoi/test_slice.csv",usecols=["x","z"])
+    vor = Voronoi(points)
+    print (dir(vor))
+    print (vor.vertices)
     
-#    for key in f.prange.keys():
-#        c.write_to_file(f.file_path_write+key+".csv",key)
+    voronoi_plot_2d(vor,show_vertices=False,point_size=5)
+    plt.show()
 
-    data = draw.Draw()
-#    data.draw_ur(f.file_path_main + "ur.pdf")
-#    data.draw_urnorm2(f.file_path_main + "urnorm2.pdf")
-    data.draw_alpha(f.file_path_main + "alpha.pdf")
+
 
 if __name__=="__main__":
 

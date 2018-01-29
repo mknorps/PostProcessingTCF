@@ -9,6 +9,7 @@ from os.path import expanduser
 StList = ['1','5','25']
 
 file_path    = expanduser("~") + "/results_for_PhD/SGS_model_results/test/"
+#file_path    = expanduser("~") + "/results_for_PhD/test/"
 fig_path     = file_path
 
 ModelLabel='model'
@@ -21,8 +22,8 @@ reference_path_LES  = expanduser("~") +"/REFERENCE_DATA/pure_LES/int2/"
 reference_path_DNS  = expanduser("~") +"/REFERENCE_DATA/Marchiolli_DATA/TUE/"
 DirectionList=['x','y','z']
 DirectionList2=['y','z','x']
-CommentRows = 58
-#CommentRows = 49
+#CommentRows = 58
+CommentRows = 49
 CommentRows_LES = 49
 CommentRows_DNS = 47
 tauplus = 0.0433 
@@ -43,6 +44,7 @@ data_DNS = {}
 # data loading
 #######################################
 
+#data["0.2"]     = np.loadtxt(file_path + 'particle_stat_2570-2580_0.2_4', skiprows = CommentRows)
 for x in StList:
     #data[x]     = np.loadtxt(file_path + 'particle_stat_3850-3950_' + x +'.0_4', skiprows = CommentRows)
     data[x]     = np.loadtxt(file_path + 'particle_stat_' + x, skiprows = CommentRows)
@@ -79,6 +81,48 @@ line_style_dict = {"St1DNS": {"ls":"solid", "color":"blue", "label":"$St1$","lw"
                    "St25LES":{"ls":"dashed", "color":"green","lw":2},
                    "St25model":{"ls":"dotted", "color":"green","lw":2}
 } 
+#axis - list of parameters for plots
+#       'xlim': [a,b]
+#       'ylim':[a,b]
+#       'xlabel': 'xlabel'
+#       'title' :"plot title"
+#data - list of data and plot properties
+#       consists of 5 elements - one for each subplot
+#       list of dictionaries containing one curve data + plot parameters:
+#            'x' - x axis data
+#            'y' - y axis data
+#            'style' - dictionary of plot style
+
+def panel(axis,data,pict_path):
+
+    fig = plt.figure(figsize = (12,9))
+    ax0 = plt.subplot2grid((7,2),(0,0),rowspan=4) #mean Ux
+    ax1 = plt.subplot2grid((7,2),(4,0),rowspan=3) #<Ux,Uy>
+    ax2 = plt.subplot2grid((7,2),(0,1),rowspan=3) #rms Ux
+    ax3 = plt.subplot2grid((7,2),(3,1),rowspan=2) #rms Uy
+    ax4 = plt.subplot2grid((7,2),(5,1),rowspan=2) #rms Uz
+    ax = [ax0,ax1,ax2,ax3,ax4]
+
+    for i,figure in enumerate(ax):
+        figure.set_title(axis[i]['title'])
+        figure.set_xlim(axis[i]['xlim'],funtsize=15)
+        figure.tick_params(axis='both',labelsize=15)
+        if axis[i]['ylim']:
+            figure.set_ylim(axis[i]['ylim'])
+        if axis[i]['xlabel']:
+            figure.set_xlabel(axis[i]['xlabel'],fontsize=15)
+
+    for i,subplot in enumerate(ax):
+        for ax_data in data[i]:
+            subplot.plot(ax_data['x'], ax_data['y'],**ax_data['style'])
+
+    leg = ax0.legend(fontsize=15)
+    plt.tight_layout()
+    fig.savefig(pict_path)
+    plt.close(fig)
+
+
+
 def velocity_panel():
     for velocity,col in columns.items():
 
@@ -198,11 +242,12 @@ def concentration_panel():
             for i,subplot in enumerate(ax):
                 subplot.plot(data_LES[x][:,0],data_LES[x][:,col["LES"][i]], **line_style_dict["St"+x+"LES"])
                 subplot.plot(data[x][:,0],data[x][:,col["model"][i]], **line_style_dict["St"+x+"model"])
+                #subplot.plot(data["0.2"][:,0],data["0.2"][:,col["model"][i]],label="St0.2 -model")
                 subplot.plot(data_DNS[x][:,0],data_DNS[x][:,col["DNS"][i]], **line_style_dict["St"+x+"DNS"])
 
         leg = ax0.legend(fontsize=15)
         plt.tight_layout()
-        fig.savefig(fig_path + velocity + "_concentration_panel_fractal.pdf")
+        fig.savefig(fig_path + velocity + "_concentration_panel_RK1_nomodel.pdf")
         plt.close(fig)
 
 if __name__=='__main__':
