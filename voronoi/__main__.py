@@ -15,6 +15,14 @@ from scipy.spatial import Voronoi, voronoi_plot_2d
 from pplib import options
 
 
+def point_halo(points):
+
+    xmin = min(points['x'])
+    xmax = max(points['x'])
+    ymin = min(points['y'])
+    ymax = max(points['y'])
+
+    halo = points['x'].apply()
 
 
 def run_project(args):
@@ -23,12 +31,12 @@ def run_project(args):
 
     parsed_args = opt.parse(args[1:])
 
-    points = pd.read_csv("~/results_for_PhD/voronoi/test_slice.csv",usecols=["x","z"])
+    points = pd.read_csv("~/results_for_PhD/voronoi/test_slice_St5_LES.csv",usecols=["x","z"])
     vor = Voronoi(points)
     print (dir(vor))
     print (vor.vertices)
     
-    voronoi_plot_2d(vor,show_vertices=False,point_size=5)
+    voronoi_plot_2d(vor,show_vertices=False,point_size=1)
     plt.show()
 
 

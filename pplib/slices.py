@@ -18,12 +18,14 @@ from pplib import parameters as p
 
 class SliceYplus:
 
-    def __init__(self,data,yplus,width):
+    def __init__(self,data,yplus,width,ptype):
 
         tausg = {} 
-        tausg['x'] = data['pos'][2] % (2*np.pi)
-        tausg['y'] = data['pos'][0]
-        tausg['z'] = data['pos'][1] % (np.pi)
+        imin = p.N_par*ptype
+        imax = p.N_par*(ptype+1)
+        tausg['x'] = data['pos'][2][imin:imax] % (2*np.pi)
+        tausg['y'] = data['pos'][0][imin:imax]
+        tausg['z'] = data['pos'][1][imin:imax] % (np.pi)
 
         self._init_slice(tausg, yplus,width)
 

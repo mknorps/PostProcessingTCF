@@ -44,9 +44,9 @@ data_DNS = {}
 # data loading
 #######################################
 
-#data["0.2"]     = np.loadtxt(file_path + 'particle_stat_2570-2580_0.2_4', skiprows = CommentRows)
-for x in StList:
-    #data[x]     = np.loadtxt(file_path + 'particle_stat_3850-3950_' + x +'.0_4', skiprows = CommentRows)
+#data["0.2"]     = np.loadtxt(file_path + 'particle_stat_2690-2700_0.2_4', skiprows = CommentRows)
+for i,x in enumerate(StList):
+    #data[i]     = np.loadtxt(file_path + 'particle_stat_2720-2820_0.2_' + str(i+1) , skiprows = CommentRows)
     data[x]     = np.loadtxt(file_path + 'particle_stat_' + x, skiprows = CommentRows)
     data_LES[x] =  np.loadtxt(reference_path_LES +'particle_stat_' + x, skiprows = CommentRows_LES)
     data_DNS[x] = np.loadtxt(reference_path_DNS +'dns_particles_' + x , skiprows = CommentRows_DNS)
@@ -238,16 +238,17 @@ def concentration_panel():
         ax3.set_title('$rms('+ velocity +'_y)^{+}$',fontsize=15)
         ax4.set_title('$rms('+ velocity +'_z)^{+}$',fontsize=15)
 
-        for x in StList:
+        for n,x in enumerate(StList):
             for i,subplot in enumerate(ax):
                 subplot.plot(data_LES[x][:,0],data_LES[x][:,col["LES"][i]], **line_style_dict["St"+x+"LES"])
-                subplot.plot(data[x][:,0],data[x][:,col["model"][i]], **line_style_dict["St"+x+"model"])
+                subplot.plot(data[x][:,0],data[x][:,col["LES"][i]], **line_style_dict["St"+x+"LES"])
+                #subplot.plot(data[n][:,0],data[n][:,col["model"][i]],label=str(n+1))
                 #subplot.plot(data["0.2"][:,0],data["0.2"][:,col["model"][i]],label="St0.2 -model")
                 subplot.plot(data_DNS[x][:,0],data_DNS[x][:,col["DNS"][i]], **line_style_dict["St"+x+"DNS"])
 
         leg = ax0.legend(fontsize=15)
         plt.tight_layout()
-        fig.savefig(fig_path + velocity + "_concentration_panel_RK1_nomodel.pdf")
+        fig.savefig(fig_path + velocity + "_concentration_panel_fractal_W1.pdf")
         plt.close(fig)
 
 if __name__=='__main__':
