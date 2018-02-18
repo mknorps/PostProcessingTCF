@@ -15,6 +15,7 @@ from pplib import options
 from pplib import afine_transformation as at
 
 
+Ufx_short = np.array([ 0.020883 ,  0.021884 ,  0.036644 ,  0.025015 ,  0.031795])
 Ufx = np.array([ 0.020883 ,  0.021884 ,  0.036644 ,  0.025015 ,  0.031795 ,
        -0.013087 , -0.017833 , -0.010748 , -0.01598  , -0.025252 ,
        -0.029198 ,  0.015406 , -0.0037895,  0.012066 ,  0.0084922,
@@ -51,26 +52,28 @@ Ux = np.array([ 0.010456  ,  0.016766  ,  0.028213  ,  0.030915  ,  0.023598  ,
         0.025849  ,  0.020879  ,  0.011305  ])
 
 
-def draw_fractal(pict_path,df):
+def draw_fractal(pict_path,*df_args,label={}):
 
+    if label == {}:
+        label={i:str(i) for i in range(len(df_args))}
     fig = plt.figure(figsize = (12,6))
     ax1 = plt.subplot2grid((1,1),(0,0)) 
 
-    ax1.xaxis.set_ticklabels([])
-    ax1.xaxis.set_ticks([])
+    ax1.xaxis.set_ticklabels([1,2,3,4,5])
+    ax1.xaxis.set_ticks([0,4,8,12,16])
     ax1.yaxis.set_ticks([])
     ax1.yaxis.set_ticklabels([])
     ax1.set_ylabel("$U_{x}$",fontsize=15)
-    ax1.set_xlabel("$x$",fontsize=15) 
+    ax1.set_xlabel("node number",fontsize=15) 
 
 
-    filtered_x = np.arange(32)*4
-    ax1.plot(Ux,label="DNS",lw=1)
-    ax1.plot(filtered_x,Ufx,label="apriori",lw=2)
+    #filtered_x = np.arange(32)*4
+    #ax1.plot(Ux,label="DNS",lw=1)
+    #ax1.plot(filtered_x,Ufx,label="apriori",lw=2)
     #ax1.plot(filtered_x[:8],Ufx[:8],label="apriori",lw=2)
 
-    ax1.plot(df["x_norm"],df["y"],label='$W^{3}$',lw=2,color='black')
-    #ax1.plot(df["x_norm"][:32*20],df1["y"][:32*20],label='W^{1}',lw=1,color='black')
+    for i,df in enumerate(df_args):
+        ax1.plot(df["x_norm"],df["y"],label = label[i],lw=2**(3-i))
 
     leg=ax1.legend()
     plt.tight_layout()
@@ -81,10 +84,11 @@ def draw_fractal(pict_path,df):
 def fractal_interpolation(ui):
     x = []
     y = []
-    samples=np.arange(0,1,0.01)
+    samples=np.arange(0,1,0.0005)
+
     #samples = np.random.random_sample((75,))
     for s in samples:
-        for i in range(1,len(Ufx)-1,2):
+        for i in range(1,len(Ufx_short)-1,2):
             interpolated = ui(i)(s) #one point
             x.append(s*2+i-1)
             y.append(interpolated)
@@ -102,13 +106,21 @@ def run_project(args):
 
     y = parsed_args.slice_yplus
 
-    d1 = 3**(-1/3)   
-    d2 = -3**(-1/3)    
+    d1 = 2**(-1/3)   
+    d2 = 2**(-1/3)    
 
     interpolated_w1 =fractal_interpolation(at.w(Ufx,d1,d2,3)) 
 
-
     draw_fractal("test.pdf", interpolated_w1)
+
+    w0 =fractal_interpolation(at.w(Ufx_short,d1,d2,0)) 
+    w1 =fractal_interpolation(at.w(Ufx_short,d1,d2,1)) 
+    w2 =fractal_interpolation(at.w(Ufx_short,d1,d2,2)) 
+    w3 =fractal_interpolation(at.w(Ufx_short,d1,d2,3)) 
+    w8 =fractal_interpolation(at.w(Ufx_short,d1,d2,8)) 
+    label = {i:'$W^{'+str(i+1)+'}$' for i in range(4)}
+    label[3] = '$W^{8}$'
+    draw_fractal("W_levels_2.pdf", w1,w2,w3,w8,label=label)
 
 if __name__=="__main__":
 

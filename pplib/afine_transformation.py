@@ -3,7 +3,7 @@
 # File name: afine_transformation.py
 # Created by: gemusia
 # Creation date: 20-01-2018
-# Last modified: 26-01-2018 16:45:34
+# Last modified: 18-02-2018 13:22:28
 # Purpose: 
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
