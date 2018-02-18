@@ -120,7 +120,7 @@ def run_project(args):
     w8 =fractal_interpolation(at.w(Ufx_short,d1,d2,8)) 
     label = {i:'$W^{'+str(i+1)+'}$' for i in range(4)}
     label[3] = '$W^{8}$'
-    draw_fractal("W_levels_2.pdf", w1,w2,w3,w8,label=label)
+    draw_fractal("W_levels_2.png", w1,w2,w3,w8,label=label)
 
 if __name__=="__main__":
 
