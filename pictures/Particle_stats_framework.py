@@ -254,7 +254,7 @@ def concentration_panel():
 
         leg = ax0.legend(fontsize=15)
         plt.tight_layout()
-        fig.savefig(fig_path + velocity + "_concentration_panel_fractal_one_W1.pdf")
+        fig.savefig(fig_path + velocity + "_concentration_panel_fractal_W123_longer.pdf")
         plt.close(fig)
 
 if __name__=='__main__':

@@ -56,7 +56,7 @@ def draw_fractal(pict_path,*df_args,label={}):
 
     if label == {}:
         label={i:str(i) for i in range(len(df_args))}
-    fig = plt.figure(figsize = (12,6))
+    fig = plt.figure(figsize = (8,4))
     ax1 = plt.subplot2grid((1,1),(0,0)) 
 
     ax1.xaxis.set_ticklabels([1,2,3,4,5])
@@ -107,7 +107,7 @@ def run_project(args):
     y = parsed_args.slice_yplus
 
     d1 = 2**(-1/3)   
-    d2 = 2**(-1/3)    
+    d2 = -2**(-1/3)    
 
     interpolated_w1 =fractal_interpolation(at.w(Ufx,d1,d2,3)) 
 
@@ -120,7 +120,7 @@ def run_project(args):
     w8 =fractal_interpolation(at.w(Ufx_short,d1,d2,8)) 
     label = {i:'$W^{'+str(i+1)+'}$' for i in range(4)}
     label[3] = '$W^{8}$'
-    draw_fractal("W_levels_2.png", w1,w2,w3,w8,label=label)
+    draw_fractal("W_levels.pdf", w1,w2,w3,w8,label=label)
 
 if __name__=="__main__":
 
