@@ -3,7 +3,7 @@
 # File name: test_optimize.py
 # Created by: gemusia
 # Creation date: 22-12-2017
-# Last modified: 27-02-2018 20:55:01
+# Last modified: 28-02-2018 21:55:45
 # Purpose: 
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -35,6 +35,16 @@ class HaloTests(unittest.TestCase):
         df.loc[100] = [99,0]
         df.loc[101] = [0,99]
         self.assertTrue(df.equals(df_halo))
+
+    def test_df_range(self):
+        df = pd.DataFrame({'x':np.arange(101),
+                          'y':np.arange(101)})
+        df_halo = hl.points_with_halo(df,'x','y',0.5)
+        self.assertAlmostEqual(min(df_halo['x']),-49)
+        self.assertAlmostEqual(max(df_halo['x']),149)
+        self.assertAlmostEqual(min(df_halo['y']),-49)
+        self.assertAlmostEqual(max(df_halo['y']),149)
+
 
 
 if __name__=='__main__':
