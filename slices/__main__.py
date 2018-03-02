@@ -3,7 +3,7 @@
 # File name: __main__.py
 # Created by: gemusia
 # Creation date: 16-12-2017
-# Last modified: 28-02-2018 21:57:21
+# Last modified: 01-03-2018 22:09:02
 # Purpose: 
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -33,13 +33,13 @@ def run_project(args):
    
 
     for ptype in range(4):
-        for i in range(4860,4881):
-            s = sc.cut_slice('/home/gemusia/results_for_PhD/voronoi/particle_fields/LES_nomodel/particles_{}'.format(i),5,width=2,ptype=ptype)
+        for i in range(1450,1471):
+            s = sc.cut_slice('/home/gemusia/results_for_PhD/SGS_model_results/FRACTAL/particles_{}'.format(i),5,width=2,ptype=ptype)
 
             left_slice_halo = hl.points_with_halo(s.left,'x','z',0.3)
             right_slice_halo = hl.points_with_halo(s.right,'x','z',0.3)
-            left_slice_halo.to_csv("/home/gemusia/results_for_PhD/voronoi/slices/LES/slice_LES_{}_{}_left.csv".format(p.StList2[ptype],i))
-            right_slice_halo.to_csv("/home/gemusia/results_for_PhD/voronoi/slices/LES/slice_LES_{}_{}_right.csv".format(p.StList2[ptype],i))
+            left_slice_halo.to_csv("/home/gemusia/results_for_PhD/voronoi/slices/FRACTAL/slice_FRACTAL_{}_{}_left.csv".format(p.StList2[ptype],i))
+            right_slice_halo.to_csv("/home/gemusia/results_for_PhD/voronoi/slices/FRACTAL/slice_FRACTAL_{}_{}_right.csv".format(p.StList2[ptype],i))
 
     #s.hexbin_plot('/home/gemusia/wyniki/time_scales_modelled/pictures/hexbin_St5_LES') 
     #s.scatter_plot('/home/gemusia/wyniki/time_scales_modelled/pictures/scatter_St5_LES') 

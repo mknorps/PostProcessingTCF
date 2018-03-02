@@ -8,7 +8,7 @@ from os.path import expanduser
 # frequently changed constants
 StList = ['1','5','25']
 
-file_path    = expanduser("~") + "/results_for_PhD/SGS_model_results/test/"
+file_path    = expanduser("~") + "/results_for_PhD/SGS_model_results/FRACTAL/"
 #file_path    = expanduser("~") + "/results_for_PhD/test/"
 fig_path     = file_path
 
@@ -72,15 +72,15 @@ columns_concentration['Us'] = {"LES":[1,32,28,29,30],
 columns_concentration['Vp'] = {"LES":[1,10,6,7,8],
                  "model":[1,10,6,7,8],
                  "DNS":[1,8,5,6,7] }
-line_style_dict = {"St1DNS": {"ls":"solid", "color":"blue", "label":"$St1$","lw":2},
-                   "St1LES": {"ls":"dashed", "color":"blue","lw":2},
-                   "St1model": {"ls":"dotted", "color":"blue","lw":2},
-                   "St5DNS": {"ls":"solid", "color":"red", "label":"$St5$","lw":2},
-                   "St5LES": {"ls":"dashed", "color":"red","lw":2},
-                   "St5model": {"ls":"dotted", "color":"red","lw":2},
-                   "St25DNS":{"ls":"solid", "color":"green", "label":"$St25$","lw":2},
-                   "St25LES":{"ls":"dashed", "color":"green","lw":2},
-                   "St25model":{"ls":"dotted", "color":"green","lw":2}
+line_style_dict = {"St1DNS": {"ls":"solid", "color":"blue", "label":"$St1$","lw":1.5},
+                   "St1LES": {"ls":"dashed", "color":"blue","lw":1.5},
+                   "St1model": {"ls":"dotted", "color":"blue","lw":2.5},
+                   "St5DNS": {"ls":"solid", "color":"red", "label":"$St5$","lw":1.5},
+                   "St5LES": {"ls":"dashed", "color":"red","lw":1.5},
+                   "St5model": {"ls":"dotted", "color":"red","lw":2.5},
+                   "St25DNS":{"ls":"solid", "color":"green", "label":"$St25$","lw":1.5},
+                   "St25LES":{"ls":"dashed", "color":"green","lw":1.5},
+                   "St25model":{"ls":"dotted", "color":"green","lw":2.5}
 } 
 
 '''
@@ -247,14 +247,14 @@ def concentration_panel():
         for n,x in enumerate(StList):
             for i,subplot in enumerate(ax):
                 subplot.plot(data['LES'][x][:,0],data['LES'][x][:,col["LES"][i]], **line_style_dict["St"+x+"LES"])
-                subplot.plot(data['model'][x][:,0],data['model'][x][:,col["LES"][i]], **line_style_dict["St"+x+"LES"])
+                subplot.plot(data['model'][x][:,0],data['model'][x][:,col["LES"][i]], **line_style_dict["St"+x+"model"])
                 #subplot.plot(data[n][:,0],data[n][:,col["model"][i]],label=str(n+1))
                 #subplot.plot(data["0.2"][:,0],data["0.2"][:,col["model"][i]],label="St0.2 -model")
                 subplot.plot(data['DNS'][x][:,0],data['DNS'][x][:,col["DNS"][i]], **line_style_dict["St"+x+"DNS"])
 
         leg = ax0.legend(fontsize=15)
         plt.tight_layout()
-        fig.savefig(fig_path + velocity + "_concentration_panel_fractal_W123_longer.pdf")
+        fig.savefig(fig_path + velocity + "_concentration_panel_fractal.pdf")
         plt.close(fig)
 
 if __name__=='__main__':
