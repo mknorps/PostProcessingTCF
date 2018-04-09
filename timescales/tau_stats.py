@@ -3,7 +3,7 @@
 # File name: tau_stats.py
 # Created by: gemusia
 # Creation date: 21-01-2018
-# Last modified: 21-01-2018 14:15:47
+# Last modified: 09-04-2018 14:02:12
 # Purpose: 
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -15,7 +15,7 @@ import numpy as np
 from itertools import product
 
 
-from pplib import binary_from_fortran as bff 
+from pplib import tcf_parsers 
 from pplib import parameters as p
 from pplib import particles as par 
 from pplib import compute_stats as cs
@@ -25,7 +25,7 @@ from pplib import optimize as o
 def tausg_generator(files):
 
     for particle_file in files:
-        data_hrf = bff.unpack_particles_file(particle_file,f.data_dict_LES)
+        data_hrf = tcf_parsers.unpack_particles_file(particle_file,f.data_dict_LES)
         df = par.Particles(data_hrf,columns_tau=['tausg2'])       
  
         binned = df.bin_stat(f.columns, norm_factor = f.norm_factor)

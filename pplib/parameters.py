@@ -81,20 +81,20 @@ vpar,upar: real*8 [400000,4]
 '''
 
 
-data_dict = OrderedDict([("t",{"size":4,"type":"integer"}),
-            ("time",{"size":8,"type":"real"}),
-            ("pos",{"size":8, "shape":[3,N],"type":"real"}),
-            ("vpar",{"size":8, "shape":[4,N],"type":"real"}),
-            ("upar",{"size":8, "shape":[4,N],"type":"real"}),
-            ("usgs",{"size":8, "shape":[3,N],"type":"real"}),
-            ("tausg1",{"size":8, "shape":[1,N],"type":"real"}),
-            ("tausg2",{"size":8, "shape":[3,N],"type":"real"})]) 
+data_dict = OrderedDict([("t",{"size":4,"type":"i"}),
+            ("time",{"size":8,"type":"d"}),
+            ("pos",{"size":8, "shape":[3,N],"type":"d"}),
+            ("vpar",{"size":8, "shape":[4,N],"type":"d"}),
+            ("upar",{"size":8, "shape":[4,N],"type":"d"}),
+            ("usgs",{"size":8, "shape":[3,N],"type":"d"}),
+            ("tausg1",{"size":8, "shape":[1,N],"type":"d"}),
+            ("tausg2",{"size":8, "shape":[3,N],"type":"d"})]) 
 
-data_dict_LES = OrderedDict([("t",{"size":4,"type":"integer"}),
-            ("time",{"size":8,"type":"real"}),
-            ("pos",{"size":8, "shape":[3,N],"type":"real"}),
-            ("vpar",{"size":8, "shape":[4,N],"type":"real"}),
-            ("upar",{"size":8, "shape":[4,N],"type":"real"})]) 
+data_dict_LES = OrderedDict([("t",{"size":4,"type":"i"}),
+            ("time",{"size":8,"type":"d"}),
+            ("pos",{"size":8, "shape":[3,N],"type":"d"}),
+            ("vpar",{"size":8, "shape":[4,N],"type":"d"}),
+            ("upar",{"size":8, "shape":[4,N],"type":"d"})]) 
 # file paths 
 file_path_main = expanduser("~") + '/wyniki/time_scales_modelled/'
 file_path_data = file_path_main + 'from_tryton/'

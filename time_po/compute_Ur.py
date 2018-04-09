@@ -3,7 +3,7 @@
 # File name: compute_Ur.py
 # Created by: gemusia
 # Creation date: 12-01-2018
-# Last modified: 15-01-2018 10:22:03
+# Last modified: 09-04-2018 14:02:08
 # Purpose: 
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -12,7 +12,7 @@ import input_files as f
 from pplib import parameters as p
 
 
-from pplib import binary_from_fortran as bff
+from pplib import tcf_parsers
 from pplib import particles as par
 from pplib import compute_stats as cs
 
@@ -22,7 +22,7 @@ def particle_generator(files,ptype):
     for particle_file in files:
         pmin=f.prange[ptype][0]
         pmax=f.prange[ptype][1]
-        data_hrf = bff.unpack_particles_file(particle_file,f.data_dict_min)
+        data_hrf = tcf_parsers.unpack_particles_file(particle_file,f.data_dict_min)
         df = par.Particles(data_hrf,(ptype,(pmin,pmax)),columns=f.ColumnList)
 
         for d in p.DirectionList:

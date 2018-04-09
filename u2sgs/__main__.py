@@ -15,7 +15,6 @@ import u2sgs_draw as d
 
 from pplib import options
 from pplib import parameters as p
-from pplib import binary_from_fortran as bff
 
 
 
