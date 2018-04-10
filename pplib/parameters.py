@@ -20,6 +20,9 @@ Retau = 150
 ttau = 1.0/(utau*Retau)
 StList = ['St0.2','St1','St5','St25']
 StList2 = ['St1','St5','St25','St125']
+StList_min = ['St1','St5','St25']
+SymTypes = ['LES','DNS','FRACTAL']
+
 DirectionList = ['x','y','z']
 DirectionMap = dict(zip(DirectionList,[2,0,1])) 
 VariableList = ['vpar', 'upar','usgs']
