@@ -3,7 +3,7 @@
 # File name: __main__.py
 # Created by: gemusia
 # Creation date: 16-12-2017
-# Last modified: 10-04-2018 12:50:41
+# Last modified: 24-04-2018 14:36:42
 # Purpose: 
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -20,7 +20,7 @@ from pplib import slice_cutter as sc
 from pplib import halo as hl
 
 def cut_with_halo(in_dir, out_dir,
-        input_file, output_file_core, ptype, offset = 0.3):
+        input_file, output_file_core, ptype, yplus=5, offset = 0.3):
     '''
     cut slice from particle positions for  y^{+}=5
     writes it to a csv file
@@ -43,7 +43,7 @@ def cut_with_halo(in_dir, out_dir,
     Slices cut and written to CSV files
     '''
 
-    s = sc.cut_slice(in_dir+input_file, 5, width=2, ptype=ptype)
+    s = sc.cut_slice(in_dir+input_file, yplus, width=2, ptype=ptype)
 
     left_slice_halo = hl.points_with_halo(s.left,'x','z',offset)
     right_slice_halo = hl.points_with_halo(s.right,'x','z',offset)
@@ -73,8 +73,8 @@ def run_project(args):
     for ptype in range(4):
         for i in range(f_min, f_max):
             input_file = 'particles_{}'.format(i)
-            output_file_core = "slice_DNS_{}_{}".format(p.StList2[ptype],i)
-            cut_with_halo(in_dir, out_dir, input_file, output_file_core, ptype)
+            output_file_core = "slice_DNS_center_{}_{}".format(p.StList2[ptype],i)
+            cut_with_halo(in_dir, out_dir, input_file, output_file_core, ptype, yplus=145)
 
 
 if __name__=="__main__":

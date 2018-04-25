@@ -77,8 +77,7 @@ def panel(pict_path,data):
         if 'title' in fig_keys:
             figure.set_title(data[key]['title'])
         if 'xlim' in fig_keys:
-            figure.set_xlim(data[key]['xlim'],
-                            fontsize=15)
+            figure.set_xlim(data[key]['xlim'])
         if 'ylim' in fig_keys:
             figure.set_ylim(data[key]['ylim'])
         if 'xlabel' in fig_keys:
@@ -128,26 +127,35 @@ def ax_data_generator(column, *data):
 
 
 
-def ksgs_panel(pict_path,st,model,LES,DNS):
+def ksgs_panel(pict_path,st,LES,DNS, **models):
 
-    for df in [model, DNS, LES]:
+    for df in [ DNS, LES]:
         df[st]['ksgs'] = 0.5*(df[st]['rms vx']**2 + df[st]['rms vy']**2
                              + df[st]['rms vz']**2)
-
     p = []
+    models_local = []
+    for key,val in models.items():
+        val['ksgs'] = 0.5*(val['rms vx']**2 + val['rms vy']**2
+                             + val['rms vz']**2)
+        models_local.append(
+            {'data':val,'style':{'label':key}})
+
     for fig_name in ['ksgs',
-        'average vx*vy','rms vx','rms vy', 'rms vz']:    
+        'average vx','average vy','average vz', 'particle concentration']:    
         p.append(ax_data_generator(fig_name,
-            {'data':model[st],'style':{'label':'model'}},
             {'data':LES[st],'style':{'label':'LES'}},
-            {'data':DNS[st],'style':{'label':'DNS'}}))
+            {'data':DNS[st],'style':{'label':'DNS'}},
+            *models_local))
 
     data_with_parameters = {
         'ax0':{'title':'$k_{sg}^{+}$','ax':p[0]},
-         'ax1':{'title':'$\langle V_x,V_y \\rangle^{+}$','ax':p[1]},
-         'ax2':{'title':'$rms(V_x)^{+}$','ax':p[2]},
-         'ax3':{'title':'$rms(V_y)^{+}$','ax':p[3]},
-         'ax4':{'title':'$rms(V_z)^{+}$','ax':p[4]}
+         'ax1':{'title':'$\langle V_x \\rangle^{+}$','ax':p[1]},
+         'ax2':{'title':'$\langle V_y \\rangle^{+}$','ax':p[2]},
+         'ax3':{'title':'$\langle V_z \\rangle^{+}$','ax':p[3]},
+         'ax4':{'title':'$C$','xscale':'log',
+                   'yscale':'log',
+                   'xlim':[0.1,160],
+                   'ax':p[4]}
     }
 
 
@@ -155,18 +163,25 @@ def ksgs_panel(pict_path,st,model,LES,DNS):
 
 
 
-def concentration_panel(pict_path,st,model,LES,DNS):
+def concentration_panel(pict_path,st,LES,DNS,**models):
     p = []
+    models_local = []
+    for key,val in models.items():
+        models_local.append(
+            {'data':val,'style':{'label':key}})
+
     for fig_name in ['particle concentration',
         'average vx*vy','rms vx','rms vy', 'rms vz']:    
         p.append(ax_data_generator(fig_name,
-            {'data':model[st],'style':{'label':'model'}},
             {'data':LES[st],'style':{'label':'LES'}},
-            {'data':DNS[st],'style':{'label':'DNS'}}))
+            {'data':DNS[st],'style':{'label':'DNS'}},
+            *models_local))
 
     data_with_parameters = {
             'ax0':{'title':'$C$','xscale':'log',
                    'yscale':'log',
+                   'xlim':[0.1,160],
+                   'ylim':[0.7,13],
                    'ax':p[0]},
          'ax1':{'title':'$\langle V_x,V_y \\rangle^{+}$','ax':p[1]},
          'ax2':{'title':'$rms(V_x)^{+}$','ax':p[2]},
@@ -177,13 +192,39 @@ def concentration_panel(pict_path,st,model,LES,DNS):
 
     panel(pict_path,data_with_parameters)
 
-if __name__=='__main__':
 
-    #######################################
-    # data loading
-    #######################################
+def draw_integration_schemes():
+    file_path    = expanduser("~") + "/results_for_PhD/IntegrationSchemes/"
+    fig_path     = file_path
 
-    file_path    = expanduser("~") + "/results_for_PhD/DNS/"
+    model_RK2 = {}
+    model_EULER = {}
+    model_EXP1 = {}
+    LES = {}
+    DNS = {}
+
+    for i,x in enumerate(StList):
+        model_RK2[x] = tcf_parsers.parse_particle_stats(file_path 
+                + 'RK2_WALLDEP_particle_stat_' + x )
+        model_EXP1[x] = tcf_parsers.parse_particle_stats(file_path 
+                + 'EXP_WALLDEP_particle_stat_' + x + '.0_4')
+        LES[x] =  tcf_parsers.parse_particle_stats(reference_path_LES 
+                + 'particle_stat_' + x)
+        DNS[x] = tcf_parsers.parse_particle_stats(reference_path_DNS 
+                + 'dns_particles_' + x)
+
+
+    for x in StList:
+        models = {'RK2': model_RK2[x],
+                  'EXP1': model_EXP1[x]}
+        concentration_panel(file_path + "MODELS_WALLDEP_concentration_panel_{}.png".format(x),
+                x,LES,DNS,**models)
+        ksgs_panel(file_path + "MODELS_WALLDEP_averages_panel_{}.png".format(x),
+                x,LES,DNS,**models)
+
+
+def draw_fractal_test():
+    file_path    = expanduser("~") + "/results_for_PhD/test/fractal/"
     fig_path     = file_path
 
     model = {}
@@ -192,17 +233,19 @@ if __name__=='__main__':
 
     for i,x in enumerate(StList):
         model[x] = tcf_parsers.parse_particle_stats(file_path 
-                + 'particle_stat_' + x)
+                + 'FRACTAL_INT2.1_particle_stat_' + x )
         LES[x] =  tcf_parsers.parse_particle_stats(reference_path_LES 
                 + 'particle_stat_' + x)
         DNS[x] = tcf_parsers.parse_particle_stats(reference_path_DNS 
                 + 'dns_particles_' + x)
 
-
-    #velocity_panel()
-    #ksgs_panel()
-    file_name = 'particle_stat_1'
-    df = tcf_parsers.parse_particle_stats(file_path + file_name)
-
     for x in StList:
-        concentration_panel(file_path + "concentration_panel_{}.pdf".format(x),x,model,LES,DNS)
+        models = {'FRACTAL, n=1': model[x]}
+        concentration_panel(file_path + "INT2.1_concentration_panel_{}.png".format(x),
+                x,LES,DNS,**models)
+
+
+if __name__=='__main__':
+    #draw_integration_schemes()
+    draw_fractal_test()
+
