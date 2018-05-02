@@ -3,7 +3,7 @@
 # File name: __main__.py
 # Created by: gemusia
 # Creation date: 16-12-2017
-# Last modified: 24-04-2018 14:36:42
+# Last modified: 30-04-2018 11:39:52
 # Purpose: 
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -43,7 +43,7 @@ def cut_with_halo(in_dir, out_dir,
     Slices cut and written to CSV files
     '''
 
-    s = sc.cut_slice(in_dir+input_file, yplus, width=2, ptype=ptype)
+    s = sc.cut_slice(in_dir+input_file, yplus, width=3, ptype=ptype)
 
     left_slice_halo = hl.points_with_halo(s.left,'x','z',offset)
     right_slice_halo = hl.points_with_halo(s.right,'x','z',offset)

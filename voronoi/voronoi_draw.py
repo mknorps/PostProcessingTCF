@@ -1,5 +1,7 @@
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib.transforms import Bbox
 import operator
 
 from scipy.spatial import Voronoi, voronoi_plot_2d
@@ -69,8 +71,10 @@ def draw_voronoi_from_slice(input_file, pict_path, usecols=["x","z"]):
     '''
     points = pd.read_csv(input_file, usecols=usecols)
     vor = Voronoi(points)
-    voronoi_plot_2d(vor,show_vertices=False,point_size=1)
-    
+    voronoi_plot_2d(vor,show_vertices=False,point_size=4)
+    plt.xlim([0,2*np.pi])
+    plt.ylim([0,np.pi])
+ 
     plt.savefig(pict_path)
 
 

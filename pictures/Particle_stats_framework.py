@@ -171,7 +171,7 @@ def concentration_panel(pict_path,st,LES,DNS,**models):
             {'data':val,'style':{'label':key}})
 
     for fig_name in ['particle concentration',
-        'average vx*vy','rms vx','rms vy', 'rms vz']:    
+        'average ux*uy','rms ux','rms uy', 'rms uz']:    
         p.append(ax_data_generator(fig_name,
             {'data':LES[st],'style':{'label':'LES'}},
             {'data':DNS[st],'style':{'label':'DNS'}},
@@ -198,16 +198,28 @@ def draw_integration_schemes():
     fig_path     = file_path
 
     model_RK2 = {}
+    model_RK2_new_code = {}
+    model_RK2_oldnonlin = {}
     model_EULER = {}
     model_EXP1 = {}
+    model_EXP1_begin_dt = {}
+    model_EXP1_old_code = {}
     LES = {}
     DNS = {}
 
     for i,x in enumerate(StList):
         model_RK2[x] = tcf_parsers.parse_particle_stats(file_path 
-                + 'RK2_WALLDEP_particle_stat_' + x )
+                + 'RK2_halfdt_particle_stat_' + x )
+        model_RK2_new_code[x] = tcf_parsers.parse_particle_stats(file_path 
+                + 'RK2_newcode_particle_stat_' + x + '.0_4' )
+        model_RK2_oldnonlin[x] = tcf_parsers.parse_particle_stats(file_path 
+                + 'RK2_newcode_oldnonlin_particle_stat_' + x + '.0_4' )
         model_EXP1[x] = tcf_parsers.parse_particle_stats(file_path 
-                + 'EXP_WALLDEP_particle_stat_' + x + '.0_4')
+                + 'EXP_alloc_particle_stat_alloc_' + x + '.0_4')
+        model_EXP1_begin_dt[x] = tcf_parsers.parse_particle_stats(file_path 
+                + 'EXP1_halfdt_particle_stat_hrmaux_' + x + '.0_4')
+        model_EXP1_old_code[x] = tcf_parsers.parse_particle_stats(file_path 
+                + 'EXP1_halfdt_particle_stat_inoldcode_' + x )
         LES[x] =  tcf_parsers.parse_particle_stats(reference_path_LES 
                 + 'particle_stat_' + x)
         DNS[x] = tcf_parsers.parse_particle_stats(reference_path_DNS 
@@ -216,10 +228,13 @@ def draw_integration_schemes():
 
     for x in StList:
         models = {'RK2': model_RK2[x],
-                  'EXP1': model_EXP1[x]}
-        concentration_panel(file_path + "MODELS_WALLDEP_concentration_panel_{}.png".format(x),
+                  'EXP1_alloc': model_EXP1[x],
+                  'RK2_oldnonlin': model_RK2_oldnonlin[x],
+#                  'EXP1_hrmaux': model_EXP1_begin_dt[x],
+                  'EXP1_old': model_EXP1_old_code[x]}
+        concentration_panel(file_path + "MODELS_WALLDEP_RK2oldnonlin_concentration_panel_{}.pdf".format(x),
                 x,LES,DNS,**models)
-        ksgs_panel(file_path + "MODELS_WALLDEP_averages_panel_{}.png".format(x),
+        ksgs_panel(file_path + "MODELS_WALLDEP_RK2oldnonlin_averages_panel_{}.png".format(x),
                 x,LES,DNS,**models)
 
 
@@ -228,24 +243,55 @@ def draw_fractal_test():
     fig_path     = file_path
 
     model = {}
+    model_lgr = {}
     LES = {}
     DNS = {}
 
     for i,x in enumerate(StList):
         model[x] = tcf_parsers.parse_particle_stats(file_path 
-                + 'FRACTAL_INT2.1_particle_stat_' + x )
+                + 'FRACTAL_INT2.4_particle_stat_' + x )
+        model_lgr[x] = tcf_parsers.parse_particle_stats(file_path 
+                + 'FRACTAL_INT2.5_particle_stat_' + x )
         LES[x] =  tcf_parsers.parse_particle_stats(reference_path_LES 
                 + 'particle_stat_' + x)
         DNS[x] = tcf_parsers.parse_particle_stats(reference_path_DNS 
                 + 'dns_particles_' + x)
 
     for x in StList:
-        models = {'FRACTAL, n=1': model[x]}
-        concentration_panel(file_path + "INT2.1_concentration_panel_{}.png".format(x),
+        models = {'FRACTAL, n=1': model[x],
+                'Lagr': model_lgr[x],}
+        concentration_panel(file_path + "INT2_vs_fractal_concentration_panel_U_{}.png".format(x),
                 x,LES,DNS,**models)
 
+def draw_integration_schemes_St02():
+    file_path    = expanduser("~") + "/results_for_PhD/IntegrationSchemes/"
+    fig_path     = file_path
+
+    model_RK2 = {}
+    model_EULER = {}
+    model_EXP1 = {}
+    LES = {}
+    DNS = {}
+
+    model_EXPSt02 = tcf_parsers.parse_particle_stats(file_path 
+            + 'EXP1_halfdt_particle_stat_0.2_4')
+    model_EXPSt1 = tcf_parsers.parse_particle_stats(file_path 
+            + 'EXP1_halfdt_particle_stat_1.0_4')
+    LES[1] =  tcf_parsers.parse_particle_stats(reference_path_LES 
+            + 'particle_stat_1' )
+    DNS[1] = tcf_parsers.parse_particle_stats(reference_path_DNS 
+            + 'dns_particles_1' )
+
+
+    models = {'EXP_St1': model_EXPSt1,
+              'EXP_St0.2': model_EXPSt02}
+    concentration_panel(file_path + "MODELS_WALLDEP_halfdt_concentration_panel_St0.2.pdf",
+            1,LES,DNS,**models)
+    ksgs_panel(file_path + "MODELS_WALLDEP_halfdt_averages_panel_St0.2.png",
+            1,LES,DNS,**models)
 
 if __name__=='__main__':
-    #draw_integration_schemes()
-    draw_fractal_test()
+    draw_integration_schemes()
+    #draw_integration_schemes_St02()
+    #draw_fractal_test()
 

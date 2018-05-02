@@ -10,10 +10,10 @@ def voronoi_hist(pict_file):
     draw histogram of Voronoi polygons areas
     '''
     data = {}
-    for st,sym_type in product(p.StList_min, p.SymTypes):
-    #for st,sym_type in product(['St1','St5','St25'], ['LES','DNS']):
+    #for st,sym_type in product(p.StList_min, p.SymTypes):
+    for st,sym_type in product(['St1','St5','St25'], ['LES','DNS']):
         hist_values =  np.loadtxt(
-                "/home/gemusia/kody/voronoi_IMP/hist_{}_{}.res"
+                "/home/gemusia/kody/voronoi_IMP/hist_{}_center_{}.dat"
                 .format(sym_type,st),skiprows=5)
         data["{} {}".format(st,sym_type)] =hist_values[:,2]  
         bins = hist_values[:,0]
@@ -28,14 +28,16 @@ def voronoi_hist(pict_file):
 def run_project(args):
     
     #draw voronoi tessalation
-    slice_file = "/home/gemusia/results_for_PhD/voronoi/slices/LES/slice_LES_St25_4860_left.csv"
-    pict_path = "/home/gemusia/results_for_PhD/voronoi/slices/LES/voronoi_snapshot_LES_St25.eps"
-    vd.draw_voronoi_from_slice(slice_file, pict_path)
+    it = {'DNS':2620, 'LES':4860}
+    for s,x in product(['DNS','LES'],[1,5,25]):
+        slice_file = "/home/gemusia/results_for_PhD/voronoi/slices/{}/slice_{}_center_St{}_{}_left.csv".format(s,s,x,it[s])
+        pict_path = "/home/gemusia/results_for_PhD/voronoi/slices/{}/voronoi_snapshot_{}_center_St{}.eps".format(s,s,x)
+        vd.draw_voronoi_from_slice(slice_file, pict_path)
 
 
 
 if __name__=="__main__":
 
     run_project(sys.argv)
-    voronoi_hist("/home/gemusia/results_for_PhD/voronoi/hist_LES_DNS_FRACTAL_voronoi.eps")
+    voronoi_hist("/home/gemusia/results_for_PhD/voronoi/hist_LES_DNS_center_voronoi.eps")
 
