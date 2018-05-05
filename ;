@@ -10,7 +10,6 @@ import os
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
 
 from pplib import options
 from pplib import afine_transformation as at
@@ -87,7 +86,7 @@ def draw_fractal(pict_path,*df_args,label={}, LES_DNS=True):
     if LES_DNS:
         x_vals = np.arange(32)*4
         ax1.plot(Ux,label="DNS",lw=1, c='black')
-        ax1.plot(x_vals,Ufx,label="filtered DNS",lw=1, linestyle='dashed', c='black')
+        ax1.plot(x_vals,Ufx,label="apriori",lw=1, linestyle='dashed', c='black')
 
     for i,df in enumerate(df_args):
         #ax1.plot(df["x_norm"],df["y"],label = label[i],lw=2**(3-i))
@@ -102,7 +101,7 @@ def draw_fractal(pict_path,*df_args,label={}, LES_DNS=True):
 def fractal_interpolation(ui):
     x = []
     y = []
-    samples=np.arange(0,1,1/(32.0*4))
+    samples=np.arange(0,1,0.0005)
 
     #samples = np.random.random_sample((75,))
     for s in samples:
@@ -146,40 +145,27 @@ def run_project(args):
 
     w3_LES = fractal_interpolation(at.w(Ufx,d1,d2,3)) 
     w3_from_resampled =fractal_interpolation(at.w(Ux_resampled,d1,d2,3)) 
-    label={0:'$W^{3}$: filtered DNS', 1:'$W^{3}$: resampled DNS'}
+    label={0:'LES', 1:'resampled DNS'}
 
     draw_fractal('LES_and_resampled.pdf', w3_LES, w3_from_resampled, label=label)
 
     ek = kinetic_energy(Ux, Ufx, Ux_resampled, w3_LES['y'], w3_from_resampled['y'])
     fft = fourier_transform(Ux, Ufx, Ux_resampled, w3_LES['y'], w3_from_resampled['y'])
-
     print(fft)
 
     plt.figure(figsize = (8,4))
-    sns.violinplot(data = list(fft.values())[:3])
-    plt.xticks(plt.xticks()[0], fft.keys())
+    plt.boxplot([0,1],[ek[0],ek[1]])
     plt.tight_layout()
-    plt.savefig("fractal_violinplot_ftt.pdf")
+    plt.show()
 
-    for_box = {'DNS':Ux, 
-               'filtered DNS':Ufx, 
-               '$W^{3}$: filtered':w3_LES['y'], 
-               'resampled DNS':Ux_resampled, 
-               '$W^{3}$: resampled':w3_from_resampled['y']}
-
-
-
-    plt.figure(figsize = (8,4))
-    sns.violinplot(data = list(for_box.values()), gridsize=100)
-    plt.xticks(plt.xticks()[0], for_box.keys())
-    plt.tight_layout()
-    plt.savefig("fractal_violinplot.pdf")
-
-    plt.figure(figsize = (8,4))
-    sns.boxplot(data = list(for_box.values()))
-    plt.xticks(plt.xticks()[0], for_box.keys())
-    plt.tight_layout()
-    plt.savefig("fractal_boxplot.pdf")
+    #w0 =fractal_interpolation(at.w(Ufx_short,d1,d2,0)) 
+    #w1 =fractal_interpolation(at.w(Ufx_short,d1,d2,1)) 
+    #w2 =fractal_interpolation(at.w(Ufx_short,d1,d2,2)) 
+    #w3 =fractal_interpolation(at.w(Ufx_short,d1,d2,3)) 
+    #w8 =fractal_interpolation(at.w(Ufx_short,d1,d2,8)) 
+    #label = {i:'$W^{'+str(i+1)+'}$' for i in range(4)}
+    #label[3] = '$W^{8}$'
+    #draw_fractal("W_levels.pdf", w1,w2,w3,w8,label=label)
 
 if __name__=="__main__":
 

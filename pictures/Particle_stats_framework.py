@@ -237,30 +237,59 @@ def draw_integration_schemes():
         ksgs_panel(file_path + "MODELS_WALLDEP_RK2oldnonlin_averages_panel_{}.png".format(x),
                 x,LES,DNS,**models)
 
-
-def draw_fractal_test():
-    file_path    = expanduser("~") + "/results_for_PhD/test/fractal/"
+def draw_local():
+    file_path    = expanduser("~") + "/Projects/ForPhD/FRACTAL/DATA/"
     fig_path     = file_path
 
     model = {}
-    model_lgr = {}
     LES = {}
     DNS = {}
 
     for i,x in enumerate(StList):
         model[x] = tcf_parsers.parse_particle_stats(file_path 
-                + 'FRACTAL_INT2.4_particle_stat_' + x )
-        model_lgr[x] = tcf_parsers.parse_particle_stats(file_path 
-                + 'FRACTAL_INT2.5_particle_stat_' + x )
+                + 'FRACTAL_fluid_particle_stat_' + x )
         LES[x] =  tcf_parsers.parse_particle_stats(reference_path_LES 
                 + 'particle_stat_' + x)
         DNS[x] = tcf_parsers.parse_particle_stats(reference_path_DNS 
                 + 'dns_particles_' + x)
 
     for x in StList:
-        models = {'FRACTAL, n=1': model[x],
-                'Lagr': model_lgr[x],}
-        concentration_panel(file_path + "INT2_vs_fractal_concentration_panel_U_{}.png".format(x),
+        models = {
+                  'test':model[x]}
+        concentration_panel(file_path + "FRACTAL_concentration_panel_U_{}.png".format(x),
+                x,LES,DNS,**models)
+
+def draw_fractal_test():
+    file_path    = expanduser("~") + "/DATA/RESULTS4PhD/TEST/FRACTAL/"
+    fig_path     = file_path
+
+    model = {}
+    model_lgr = {}
+    model_lgr_standalone = {}
+    model_fractal_hrmlgr = {}
+    model_fractal_hrmlgr_return = {}
+    LES = {}
+    DNS = {}
+
+    for i,x in enumerate(StList):
+        model_fractal_hrmlgr_return[x] = tcf_parsers.parse_particle_stats(file_path 
+                + 'FRACTAL_hrmlgr_return_particle_stat_' + x )
+        model_fractal_hrmlgr[x] = tcf_parsers.parse_particle_stats(file_path 
+                + 'FRACTAL_hrmlgr_particle_stat_' + x )
+        model_lgr[x] = tcf_parsers.parse_particle_stats(file_path 
+                + 'LAGR2_particle_stat_' + x )
+        model_lgr_standalone[x] = tcf_parsers.parse_particle_stats(file_path 
+                + 'LAGR2_standalone_particle_stat_' + x )
+        LES[x] =  tcf_parsers.parse_particle_stats(reference_path_LES 
+                + 'particle_stat_' + x)
+        DNS[x] = tcf_parsers.parse_particle_stats(reference_path_DNS 
+                + 'dns_particles_' + x)
+
+    for x in StList:
+        models = {'Lagr2': model_lgr[x],
+                'Lagr2_standalone': model_lgr_standalone[x],
+                  'fractal_return':model_fractal_hrmlgr_return[x]}
+        concentration_panel(file_path + "FRACTAL_hrmlgr_concentration_panel_U_{}.png".format(x),
                 x,LES,DNS,**models)
 
 def draw_integration_schemes_St02():
@@ -291,7 +320,8 @@ def draw_integration_schemes_St02():
             1,LES,DNS,**models)
 
 if __name__=='__main__':
-    draw_integration_schemes()
+    #draw_integration_schemes()
     #draw_integration_schemes_St02()
     #draw_fractal_test()
+    draw_local()
 
