@@ -78,8 +78,8 @@ def draw_fractal(pict_path,*df_args,label={}, LES_DNS=True):
 
     ax1.xaxis.set_ticklabels(np.arange(0,32, 2))
     ax1.xaxis.set_ticks(np.arange(0,32,2)*4)
-    ax1.yaxis.set_ticks([])
-    ax1.yaxis.set_ticklabels([])
+    #ax1.yaxis.set_ticks([])
+    #ax1.yaxis.set_ticklabels([])
     ax1.set_ylabel("$U_{x}$",fontsize=15)
     ax1.set_xlabel("node number",fontsize=15) 
 
@@ -89,9 +89,10 @@ def draw_fractal(pict_path,*df_args,label={}, LES_DNS=True):
         ax1.plot(Ux,label="DNS",lw=1, c='black')
         ax1.plot(x_vals,Ufx,label="filtered DNS",lw=1, linestyle='dashed', c='black')
 
+    colors = ['darkorange','slateblue']
     for i,df in enumerate(df_args):
         #ax1.plot(df["x_norm"],df["y"],label = label[i],lw=2**(3-i))
-        ax1.plot(df["x_norm"],df["y"],label = label[i], lw=2, color=plt.cm.tab20(0.2*i-0.1), alpha=0.7)
+        ax1.plot(df["x_norm"],df["y"],label = label[i], lw=2, color=colors[i], alpha=0.7)
 
     leg=ax1.legend()
     plt.tight_layout()
@@ -153,8 +154,6 @@ def run_project(args):
     ek = kinetic_energy(Ux, Ufx, Ux_resampled, w3_LES['y'], w3_from_resampled['y'])
     fft = fourier_transform(Ux, Ufx, Ux_resampled, w3_LES['y'], w3_from_resampled['y'])
 
-    print(fft)
-
     plt.figure(figsize = (8,4))
     sns.violinplot(data = list(fft.values())[:3])
     plt.xticks(plt.xticks()[0], fft.keys())
@@ -169,11 +168,12 @@ def run_project(args):
 
 
 
+    colors  = {i:v for i,v in enumerate( ['lightgrey','lightgrey','darkorange', 'lightgrey','slateblue'])}
     plt.figure(figsize = (8,4))
-    sns.violinplot(data = list(for_box.values()), gridsize=100)
+    sns.violinplot(data = list(for_box.values()), orient='v', palette=colors, inner='quartile', bw='silverman')
     plt.xticks(plt.xticks()[0], for_box.keys())
     plt.tight_layout()
-    plt.savefig("fractal_violinplot.pdf")
+    plt.savefig("fractal_violinplot.png")
 
     plt.figure(figsize = (8,4))
     sns.boxplot(data = list(for_box.values()))

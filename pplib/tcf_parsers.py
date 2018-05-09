@@ -103,8 +103,6 @@ def parse_particle_stats(input_file : str) -> pd.DataFrame:
     p = re.compile(pattern)            
     column_names = [] 
 
-    # check if file exists
-    assert(exists(input_file))
 
     # obtaining names of columns and number of skiprows
     with open(input_file) as f:
