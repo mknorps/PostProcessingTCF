@@ -11,6 +11,8 @@
 import sys
 import csv
 from os.path import expanduser
+sys.path.insert(0,'/home/mknorps/Projects/ForPhD/PostProcessingTCF/')
+
 from pplib import tcf_parsers
 
 import stat_panels as sp
@@ -30,7 +32,7 @@ def read_input(input_file):
         stat_reader = csv.reader(csvfile)
         headers = next(stat_reader)
         for row in stat_reader:
-            models[row[0]]=row[1]
+            models[row[0]]=row[1].strip()
 
     return models
 
@@ -46,6 +48,7 @@ def run_project(args):
     velocity = parsed_args.velocity
     panel = parsed_args.panel
 
+    print(output_file)
     if input_file:
         print ("input file: ",input_file)
         models_input = read_input(input_file)
@@ -68,7 +71,7 @@ def run_project(args):
 
     for i,x in enumerate(StList):
 
-        for k,v in models.items():
+        for k,v in models_input.items():
             models[k]=tcf_parsers.parse_particle_stats(v +x) 
 
         LES[x] =  tcf_parsers.parse_particle_stats(reference_path_LES 

@@ -230,9 +230,8 @@ def concentration_panel(pict_path,st,LES,DNS,velocity='u',**models):
 
     data_with_parameters = {
             'ax0':{'title':'$C$','xscale':'log',
-                   'yscale':'log',
-                   'xlim':[0.1,160],
-                   'ylim':[0.7,13],
+                   'xlim':[0.01,160],
+                   'ylim':[0.5,7],
                    'ax':p[0]},
          'ax1':{'title':'$\langle {}_x,{}_y \\rangle^{}$'.format(velocity,velocity, "+"),
                 'ax':p[1]},
