@@ -21,7 +21,9 @@ def draw_histogram(pict_path, bc, theoretical, **args_experiment):
         theoretical distribution
     args_experiment: dictionary
         distribution obtained in experiment
-        keys are labels and values are data arrays
+        keys are labels and 
+        values are list of data arrays and plot options:
+             [data, {plot_option1:...}]
 
     Output
     ------
@@ -30,16 +32,16 @@ def draw_histogram(pict_path, bc, theoretical, **args_experiment):
     '''
 
     for arg in args_experiment.values():
-        assert len(arg) == len(bc)
+        assert len(arg[0]) == len(bc)
 
     fig = plt.figure(figsize = (6,4))
     ax1 = plt.subplot2grid((1,1),(0,0))
 
     ax1.set_xlabel("$A/\langle A\\rangle$",fontsize=15)
 
-    ax1.plot(bc,theoretical,label="$\Gamma(a,b)$", color='black')
+    ax1.plot(bc,theoretical,label="$f_{\Gamma}$", color='black')
     for key,val in args_experiment.items():
-        ax1.plot(bc,val,label=key)
+        ax1.plot(bc,val[0],label=key,**val[1] )
 
     # sort legend items
     handles, labels = ax1.get_legend_handles_labels() 
@@ -53,7 +55,7 @@ def draw_histogram(pict_path, bc, theoretical, **args_experiment):
     plt.close(fig)
 
 
-def draw_voronoi_from_slice(input_file, pict_path, usecols=["x","z"]):
+def draw_voronoi_from_slice(input_file, pict_path=None, usecols=["x","z"]):
     '''
     Draw voronoi polygons and save it as pict_path
 
@@ -75,6 +77,9 @@ def draw_voronoi_from_slice(input_file, pict_path, usecols=["x","z"]):
     plt.xlim([0,2*np.pi])
     plt.ylim([0,np.pi])
  
-    plt.savefig(pict_path)
+    if pict_path:
+        plt.savefig(pict_path)
+    else:
+        plt.show()
 
 

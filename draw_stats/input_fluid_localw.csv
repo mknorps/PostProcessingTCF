@@ -2,8 +2,4 @@ KEY, FILE
 INT2_local,/home/mknorps/Projects/ForPhD/SPECTRAL_from2011/RK2/RK2_fluid_particle_stat_
 FRACTAL_local,/home/mknorps/Projects/ForPhD/SPECTRAL_from2011/FRACTAL_fluid/RK2_FRACTAL_fluid_particle_stat_
 FRACTAL_local_100it,/home/mknorps/Projects/ForPhD/SPECTRAL_from2011/FRACTAL_fluid/RK2_FRACTAL_fluid_particle_100it_stat_
-INT2_local_Euler,/home/mknorps/Projects/ForPhD/SPECTRAL_from2011/EULER/EULER_fluid_particle_stat_
 INT4_local,/home/mknorps/Projects/ForPhD/SPECTRAL_from2011/INT4_fluid/RK2_INT4_fluid_particle_stat_
-INT2_tryton_60k,/home/mknorps/DATA/RESULTS4PhD/TEST/FLUID/RK2_INT2_Tryton_fluid_particle_stat_
-INT2_tryton_360k,/home/mknorps/DATA/RESULTS4PhD/TEST/FLUID/RK2_INT2_Tryton_360k_fluid_particle_stat_
-INT2_tryton_600k,/home/mknorps/DATA/RESULTS4PhD/TEST/FLUID/RK2_INT2_Tryton_600k_fluid_particle_stat_

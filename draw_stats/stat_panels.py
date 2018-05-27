@@ -163,8 +163,8 @@ def ksgs_panel(pict_path,st,LES,DNS,velocity='u', **models):
             'average {}x'.format(velocity),'average {}y'.format(velocity),
             'average {}z'.format(velocity), 'particle concentration']:    
         p.append(ax_data_generator(fig_name,
-            {'data':LES[st],'style':{'label':'LES'}},
-            {'data':DNS[st],'style':{'label':'DNS'}},
+            {'data':LES[st],'style':{'label':'LES', 'ls':'dashed','c':'red'}},
+            {'data':DNS[st],'style':{'label':'DNS','ls':'solid','c':'red'}},
             *models_local))
 
     data_with_parameters = {
@@ -224,20 +224,19 @@ def concentration_panel(pict_path,st,LES,DNS,velocity='u',**models):
         'rms {}x'.format(velocity),'rms {}y'.format(velocity), 
         'rms {}z'.format(velocity)]:    
         p.append(ax_data_generator(fig_name,
-            {'data':LES[st],'style':{'label':'LES'}},
-            {'data':DNS[st],'style':{'label':'DNS'}},
+            {'data':LES[st],'style':{'label':'LES', 'ls':'dashed','c':'red'}},
+            {'data':DNS[st],'style':{'label':'DNS', 'ls':'solid', 'c':'red'}},
             *models_local))
 
     data_with_parameters = {
             'ax0':{'title':'$C$','xscale':'log',
-                   'xlim':[0.01,160],
-                   'ylim':[0.5,7],
+                   'xlim':[0.1,160],
                    'ax':p[0]},
          'ax1':{'title':'$\langle {}_x,{}_y \\rangle^{}$'.format(velocity,velocity, "+"),
                 'ax':p[1]},
          'ax2':{'title':'$rms({}_x)^{}$'.format(velocity,"+"),'ax':p[2]},
-         'ax3':{'title':'$rms({}_y)^{}$'.format(velocity,"+"),'ax':p[3]},
-         'ax4':{'title':'$rms({}_z)^{}$'.format(velocity,"+"),'ax':p[4]}
+         'ax3':{'title':'$rms({}_y)^{}$'.format(velocity,"+"),'ax':p[3],'ylim':[0,1]},
+         'ax4':{'title':'$rms({}_z)^{}$'.format(velocity,"+"),'ax':p[4],'ylim':[0,1],}
     }
 
 

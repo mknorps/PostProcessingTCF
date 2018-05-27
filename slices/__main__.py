@@ -13,6 +13,10 @@ import sys
 import os
 import pandas as pd
 
+dir_path ='/home/mknorps/Projects/ForPhD/PostProcessingTCF/' 
+# append src module to inport paths
+sys.path.append(dir_path)
+
 from pplib import options
 from pplib import parameters as p
 from pplib import slices as s
@@ -66,14 +70,14 @@ def run_project(args):
         print('Hello! ', y)
    
 
-    in_dir = "/home/gemusia/results_for_PhD/voronoi/particle_fields/DNS/"
-    out_dir = "/home/gemusia/results_for_PhD/voronoi/slices/DNS/"
-    f_min = 2620
-    f_max = 2640
+    in_dir = "/home/mknorps/Projects/ForPhD/SPECTRAL_from2011/FRACTAL/"
+    out_dir = "/home/mknorps/Projects/ForPhD/SPECTRAL_from2011/FRACTAL/slices/"
+    f_min = 880
+    f_max = 900
     for ptype in range(4):
         for i in range(f_min, f_max):
-            input_file = 'particles_{}'.format(i)
-            output_file_core = "slice_DNS_center_{}_{}".format(p.StList2[ptype],i)
+            input_file = 'particles_0{}'.format(i)
+            output_file_core = "slice_FRACTAL_center_{}_{}".format(p.StList2[ptype],i)
             cut_with_halo(in_dir, out_dir, input_file, output_file_core, ptype, yplus=145)
 
 

@@ -79,7 +79,7 @@ def run_project(args):
         DNS[x] = tcf_parsers.parse_particle_stats(reference_path_DNS 
                 + 'dns_particles_' + x)
 
-        panel_choice[panel]("{}_{}_{}.pdf".format(output_file,velocity,x),
+        panel_choice[panel]("{}_{}_{}_{}.pdf".format(output_file,panel,velocity,x),
                 x,LES,DNS,velocity=velocity,**models)
 
 

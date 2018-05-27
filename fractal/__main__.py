@@ -12,9 +12,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+from os.path import expanduser
+sys.path.insert(0,'/home/mknorps/Projects/ForPhD/PostProcessingTCF/')
+
 from pplib import options
 from pplib import afine_transformation as at
-
 
 Ufx_short = np.array([ 0.020883 ,  0.021884 ,  0.036644 ,  0.025015 ,  0.031795])
 Ufx = np.array([ 0.020883 ,  0.021884 ,  0.036644 ,  0.025015 ,  0.031795 ,
@@ -80,7 +82,7 @@ def draw_fractal(pict_path,*df_args,label={}, LES_DNS=True):
     ax1.xaxis.set_ticks(np.arange(0,32,2)*4)
     #ax1.yaxis.set_ticks([])
     #ax1.yaxis.set_ticklabels([])
-    ax1.set_ylabel("$U_{x}$",fontsize=15)
+    ax1.set_ylabel("$U_{y}$",fontsize=15)
     ax1.set_xlabel("node number",fontsize=15) 
 
 
@@ -150,6 +152,7 @@ def run_project(args):
     label={0:'$W^{3}$: filtered DNS', 1:'$W^{3}$: resampled DNS'}
 
     draw_fractal('LES_and_resampled.pdf', w3_LES, w3_from_resampled, label=label)
+    draw_fractal('LES_and_DNS.pdf')
 
     ek = kinetic_energy(Ux, Ufx, Ux_resampled, w3_LES['y'], w3_from_resampled['y'])
     fft = fourier_transform(Ux, Ufx, Ux_resampled, w3_LES['y'], w3_from_resampled['y'])
@@ -173,7 +176,7 @@ def run_project(args):
     sns.violinplot(data = list(for_box.values()), orient='v', palette=colors, inner='quartile', bw='silverman')
     plt.xticks(plt.xticks()[0], for_box.keys())
     plt.tight_layout()
-    plt.savefig("fractal_violinplot.png")
+    plt.savefig("fractal_violinplot.pdf")
 
     plt.figure(figsize = (8,4))
     sns.boxplot(data = list(for_box.values()))
