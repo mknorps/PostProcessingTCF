@@ -146,39 +146,41 @@ def ksgs_panel(pict_path, st, LES, DNS, velocity='u', **models):
 
     for df in [DNS, LES]:
         df[st]['ksgs'] = 0.5*(df[st]['rms {}x'.format(velocity)]**2
-              + df[st]['rms {}y'.format(velocity)]**2
-              + df[st]['rms {}z'.format(velocity)]**2)
+                              + df[st]['rms {}y'.format(velocity)]**2
+                              + df[st]['rms {}z'.format(velocity)]**2)
 
     models_local = []
     for key, val in models.items():
-        val['ksgs'] = 0.5*(val['rms {}x'.format(velocity)]**2 
-                + val['rms {}y'.format(velocity)]**2
-                + val['rms {}z'.format(velocity)]**2)
-        models_local.append(
-            {'data':val,'style':{'label':key}})
+        val['ksgs'] = 0.5*(val['rms {}x'.format(velocity)]**2
+                           + val['rms {}y'.format(velocity)]**2
+                           + val['rms {}z'.format(velocity)]**2)
+        models_local.append({'data':val, 'style':{'label':key}})
 
     p = []
-    for fig_name in ['ksgs',
-            'average {}x'.format(velocity),'average {}y'.format(velocity),
-            'average {}z'.format(velocity), 'particle concentration']:    
-        p.append(ax_data_generator(fig_name,
-            {'data':LES[st],'style':{'label':'LES', 'ls':'dashed','c':'red'}},
-            {'data':DNS[st],'style':{'label':'DNS','ls':'solid','c':'red'}},
+    for fig_name in ['ksgs', 'average {}x'.format(velocity),
+                     'average {}y'.format(velocity),
+                     'average {}z'.format(velocity),
+                     'particle concentration']:
+        p.append(ax_data_generator(
+            fig_name,
+            {'data':LES[st], 'style':{'label':'LES', 'ls':'dashed', 'c':'red'}},
+            {'data':DNS[st], 'style':{'label':'DNS', 'ls':'solid', 'c':'red'}},
             *models_local))
 
     data_with_parameters = {
-         'ax0':{'title':'$k_{sg}^{+}$', 'ax':p[0]},
-         'ax1':{'title':'$\\langle {}_x \\rangle^{}$'.format(velocity,"+"), 'ax':p[1]},
-         'ax2':{'title':'$\\langle {}_y \\rangle^{}$'.format(velocity,"+"), 'ax':p[2]},
-         'ax3':{'title':'$\\langle {}_z \\rangle^{}$'.format(velocity,"+"), 'ax':p[3]},
-         'ax4':{'title':'$C$','xscale':'log',
-                   'yscale':'log',
-                   'xlim':[0.1,160],
-                   'ax':p[4]}
+        'ax0':{'title':'$k_{sg}^{+}$', 'ax':p[0]},
+        'ax1':{'title':'$\\langle {}_x \\rangle^{}$'.format(velocity, "+"), 'ax':p[1]},
+        'ax2':{'title':'$\\langle {}_y \\rangle^{}$'.format(velocity, "+"), 'ax':p[2]},
+        'ax3':{'title':'$\\langle {}_z \\rangle^{}$'.format(velocity, "+"), 'ax':p[3]},
+        'ax4':{'title':'$C$',
+               'xscale':'log',
+               'yscale':'log',
+               'xlim':[0.1, 160],
+               'ax':p[4]}
     }
 
 
-    panel(pict_path,data_with_parameters)
+    panel(pict_path, data_with_parameters)
 
 
 
@@ -211,7 +213,7 @@ def concentration_panel(pict_path, st, LES, DNS, velocity='u', **models):
     ------
     Panel of figures saved in pict_path.
     '''
- 
+
     models_local = []
     for key, val in models.items():
         models_local.append(
@@ -219,25 +221,27 @@ def concentration_panel(pict_path, st, LES, DNS, velocity='u', **models):
 
     p = []
     for fig_name in ['particle concentration',
-        'average {}x*{}y'.format(velocity,velocity),
-        'rms {}x'.format(velocity), 'rms {}y'.format(velocity),  
-        'rms {}z'.format(velocity)]:    
-        p.append(ax_data_generator(fig_name,
-            {'data':LES[st], 'style':{'label':'LES', 'ls':'dashed', 'c':'red'}}, 
-            {'data':DNS[st], 'style':{'label':'DNS', 'ls':'solid', 'c':'red'}}, 
+                     'average {}x*{}y'.format(velocity, velocity),
+                     'rms {}x'.format(velocity),
+                     'rms {}y'.format(velocity),
+                     'rms {}z'.format(velocity)]:
+        p.append(ax_data_generator(
+            fig_name,
+            {'data':LES[st], 'style':{'label':'LES', 'ls':'dashed', 'c':'red'}},
+            {'data':DNS[st], 'style':{'label':'DNS', 'ls':'solid', 'c':'red'}},
             *models_local))
 
     data_with_parameters = {
-            'ax0':{'title':'$C$', 'xscale':'log', 
-                   'xlim':[0.1,160],
-                   'ax':p[0]},
-         'ax1':{'title':'$\langle {}_x,{}_y \\rangle^{}$'.format(velocity,velocity, "+"),
+        'ax0':{'title':'$C$',
+               'xscale':'log',
+               'xlim':[0.1, 160],
+               'ax':p[0]},
+        'ax1':{'title':'$\langle {}_x,{}_y \\rangle^{}$'.format(velocity, velocity, "+"),
                'ax':p[1]},
-         'ax2':{'title':'$rms({}_x)^{}$'.format(velocity, "+"), 'ax':p[2]}, 
-         'ax3':{'title':'$rms({}_y)^{}$'.format(velocity, "+"), 'ax':p[3], 'ylim':[0, 1]}, 
-         'ax4':{'title':'$rms({}_z)^{}$'.format(velocity, "+"), 'ax':p[4], 'ylim':[0, 1]}
+        'ax2':{'title':'$rms({}_x)^{}$'.format(velocity, "+"), 'ax':p[2]},
+        'ax3':{'title':'$rms({}_y)^{}$'.format(velocity, "+"), 'ax':p[3], 'ylim':[0, 1]},
+        'ax4':{'title':'$rms({}_z)^{}$'.format(velocity, "+"), 'ax':p[4], 'ylim':[0, 1]}
     }
 
 
     panel(pict_path, data_with_parameters)
-
