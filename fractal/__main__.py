@@ -18,7 +18,7 @@ sys.path.insert(0,'/home/mknorps/Projects/ForPhD/PostProcessingTCF/')
 from pplib import options
 from pplib import afine_transformation as at
 
-Ufx_short = np.array([ 0.020883 ,  0.021884 ,  0.036644 ,  0.025015 ,  0.031795])
+UFX_SHORT = np.array([ 0.020883 ,  0.021884 ,  0.036644 ,  0.025015 ,  0.031795])
 Ufx = np.array([ 0.020883 ,  0.021884 ,  0.036644 ,  0.025015 ,  0.031795 ,
        -0.013087 , -0.017833 , -0.010748 , -0.01598  , -0.025252 ,
        -0.029198 ,  0.015406 , -0.0037895,  0.012066 ,  0.0084922,
@@ -88,10 +88,10 @@ def draw_fractal(pict_path,*df_args,label={}, LES_DNS=True):
 
     if LES_DNS:
         x_vals = np.arange(32)*4
-        ax1.plot(Ux,label="DNS",lw=1, c='black')
-        ax1.plot(x_vals,Ufx,label="filtered DNS",lw=1, linestyle='dashed', c='black')
+        ax1.plot(Ux[:17],label="DNS",lw=1, c='black')
+        ax1.plot(x_vals[:5],Ufx[:5],label="filtered DNS",lw=1, linestyle='dashed', c='black')
 
-    colors = ['darkorange','slateblue']
+    colors = ['darkorange','slateblue','green']
     for i,df in enumerate(df_args):
         #ax1.plot(df["x_norm"],df["y"],label = label[i],lw=2**(3-i))
         ax1.plot(df["x_norm"],df["y"],label = label[i], lw=2, color=colors[i], alpha=0.7)
@@ -102,14 +102,14 @@ def draw_fractal(pict_path,*df_args,label={}, LES_DNS=True):
     plt.close(fig)
 
 
-def fractal_interpolation(ui):
+def fractal_interpolation(ui,l):
     x = []
     y = []
     samples=np.arange(0,1,1/(32.0*4))
 
     #samples = np.random.random_sample((75,))
     for s in samples:
-        for i in range(1,len(Ufx)-1,2):
+        for i in range(1,l-1,2):
             interpolated = ui(i)(s) #one point
             x.append(s*2+i-1)
             y.append(interpolated)
@@ -135,6 +135,23 @@ def fourier_transform(*args):
 
     return fft
 
+def draw_interpolation_scheme():
+
+    d1 = 2**(-1/3)   
+    d2 = -2**(-1/3)    
+
+    d1_1 = 2**(-1/5)   
+    d2_1 = -2**(-1/5)    
+
+    d1_2 = 2**(-1/11)   
+    d2_2 = -2**(-1/11)    
+
+    w3_13 = fractal_interpolation(at.w(UFX_SHORT,d1,d2,3),len(UFX_SHORT)) 
+    w3_17 = fractal_interpolation(at.w(UFX_SHORT,d1_2,d2_2,3),len(UFX_SHORT)) 
+    w3_15 = fractal_interpolation(at.w(UFX_SHORT,d1_1,d2_1,3), len(UFX_SHORT)) 
+    label={0:'$|d_{i}| = 2^{-1/3}$', 1:'$|d_{i}| = 2^{-1/5}$', 2:'$|d_{i}| = 2^{-1/11}$'}
+
+    draw_fractal('stretching_factors.pdf', w3_13, w3_15,w3_17, label=label)
 
 def run_project(args):
     
@@ -147,8 +164,8 @@ def run_project(args):
     d1 = 2**(-1/3)   
     d2 = -2**(-1/3)    
 
-    w3_LES = fractal_interpolation(at.w(Ufx,d1,d2,3)) 
-    w3_from_resampled =fractal_interpolation(at.w(Ux_resampled,d1,d2,3)) 
+    w3_LES = fractal_interpolation(at.w(Ufx,d1,d2,3), len(Ufx)) 
+    w3_from_resampled =fractal_interpolation(at.w(Ux_resampled,d1,d2,3), len(Ufx)) 
     label={0:'$W^{3}$: filtered DNS', 1:'$W^{3}$: resampled DNS'}
 
     draw_fractal('LES_and_resampled.pdf', w3_LES, w3_from_resampled, label=label)
@@ -187,4 +204,6 @@ def run_project(args):
 if __name__=="__main__":
 
     run_project(sys.argv)
+
+    draw_interpolation_scheme()
 
